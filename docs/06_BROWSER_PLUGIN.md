@@ -1,6 +1,7 @@
 # Federflink - Browser-Plugin
 
-> Wird mit Phase 5 ausgebaut.
+Die Erweiterung liegt unter `extension/` (Manifest V3, reines JavaScript). Laden
+und Bedienung: siehe `extension/README.md`.
 
 ## Aufbau (drei Schichten)
 

@@ -1,6 +1,6 @@
 # Federflink - Lernen
 
-> Wird mit Phase 2 (allgemein) und Phase 4 (Umfeld-Kontext) ausgebaut.
+Federflink lernt auf zwei Ebenen; beides wird ueber `POST /api/learn` gespeist.
 
 ## Stufe 1 - allgemein
 

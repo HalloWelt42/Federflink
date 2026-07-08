@@ -9,14 +9,25 @@ abschaltbar. Betrieb zuerst auf dem Mac, spaeter zentral auf einem Pi5.
 
 ## Aktueller Stand
 
-- Geruest steht: FastAPI-Backend + Svelte-5-Oberflaeche starten ueber `./start.sh`
-- Endpunkte `/api/health` und `/api/capabilities` (Selbstauskunft fuer Clients)
-- Engine-Registry fuer Pruef- und Ergaenzungs-Engines (per Dekorator erweiterbar)
-- SQLite-Ablage angelegt (Woerterbuch, N-Gramme, Kontext, Profile, Telemetrie)
-- Steuer-Oberflaeche mit Statusansicht (Version, Engines, Grenzen), drei Themes
+- **Rechtschreibung**: Hunspell (deutsch, inkl. Komposita) mit Vorschlaegen,
+  optional LanguageTool (Grammatik); persoenliches Woerterbuch filtert Bekanntes.
+- **Korrektur**: neuronale Ganzsatz-Korrektur ueber ein lokales Sprachmodell,
+  mit Schutznetzen gegen Halluzination und Prompt-Injection.
+- **Ergaenzung**: Wortvervollstaendigung (Trie), naechstes Wort/Phrase (N-Gramm,
+  online lernend) und kontextsensitive LLM-Fortsetzung - per SSE als Progressive
+  Enhancement (sofortiger Vorschlag, dann LLM-Upgrade).
+- **Lernen**: Stufe 1 (persoenliches Woerterbuch + N-Gramme) und Stufe 2
+  (eigener Embedding-Kontextspeicher, self-contained) - beides ueber `/api/learn`.
+- **Profile**: eingebaute + eigene Schreibprofile mit Stil und Host-Zuordnung.
+- **Steuer-Oberflaeche** (Svelte 5): Spielwiese fuer Rechtschreibung/Korrektur,
+  Ergaenzungs-Spielwiese mit Inline-Geistertext, Woerterbuch, Profile, Status;
+  drei Themes.
+- **Browser-Erweiterung** (`extension/`, MV3): Copilot-artige Vorschau in
+  beliebigen Feldern; Tab uebernimmt, Esc verwirft; fein steuerbar, abschaltbar.
+- **Dokumentation** (`docs/`): mehrteilig, inkl. vollstaendiger API und
+  Integrationsleitfaden fuer eigene Programme.
 
-Die eigentlichen Faehigkeiten (Rechtschreibung, Ergaenzung, Lernen, Erweiterung)
-folgen in den weiteren Ausbaustufen - siehe `docs/`.
+Details und Integration: siehe [docs/](docs/).
 
 ## Starten
 

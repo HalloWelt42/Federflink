@@ -15,5 +15,5 @@ eigene Anwendungen einbinden.
 9. [08_DEPLOYMENT_PI.md](08_DEPLOYMENT_PI.md) - Betrieb auf dem Pi5
 10. [09_MODELLE.md](09_MODELLE.md) - empfohlene kleine Modelle
 
-Stand: die Dokumentation waechst mit dem Projekt. Abschnitte zu noch nicht
-gebauten Faehigkeiten sind als solche markiert.
+Der Integrationsvertrag steht in [02_API.md](02_API.md), das Rezept zum Einbinden
+in eigene Programme in [07_CLIENT_INTEGRATION.md](07_CLIENT_INTEGRATION.md).

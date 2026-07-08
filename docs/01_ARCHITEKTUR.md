@@ -1,6 +1,6 @@
 # Federflink - Architektur
 
-> Wird ausgebaut. Der Ueberblick der Schichten steht in [00_UEBERBLICK.md](00_UEBERBLICK.md).
+Der Ueberblick der Schichten steht in [00_UEBERBLICK.md](00_UEBERBLICK.md).
 
 ## Backend-Aufbau
 

@@ -1,7 +1,5 @@
 # Federflink - Profile und Konfiguration
 
-> Wird mit Phase 3/4 ausgebaut.
-
 ## Profile
 
 Ein Profil buendelt Ton/Stil (System-Hinweis fuer das LLM), ein eigenes
