@@ -6,19 +6,8 @@ import pytest
 
 from app.lernen import woerterbuch
 from app.modelle.pruefung import PruefAnfrage
-from app.persistence.db import get_db
 from app.pruef_engines.hunspell_engine import HunspellEngine
 from app.services import korrektur, llm_client, pruefung
-
-
-@pytest.fixture(autouse=True)
-def frische_db():
-    db = get_db()
-    db.init_schema()
-    with db.connect() as conn:
-        conn.execute("DELETE FROM woerter")
-        conn.execute("DELETE FROM ngramme")
-    yield
 
 
 def _hunspell_da() -> bool:

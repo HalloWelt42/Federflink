@@ -44,6 +44,21 @@ def _lade_dict() -> object | None:
     return _dict
 
 
+def kennt_wort(wort: str) -> bool | None:
+    """True/False, ob das Woerterbuch das Wort kennt; None, wenn kein Woerterbuch da ist.
+
+    Wird beim Lernen genutzt, um nur wirklich unbekannte Woerter ins persoenliche
+    Woerterbuch aufzunehmen (statt es mit Allerweltswoertern zu fluten).
+    """
+    woerterbuch = _lade_dict()
+    if woerterbuch is None:
+        return None
+    try:
+        return bool(woerterbuch.lookup(wort))  # type: ignore[attr-defined]
+    except Exception:  # noqa: BLE001
+        return None
+
+
 @pruef_engine
 class HunspellEngine:
     engine_id: ClassVar[str] = "hunspell"

@@ -46,6 +46,18 @@ class LlmStatus(BaseModel):
     modelle: list[str] = Field(default_factory=list)
 
 
+class EngineAnnahme(BaseModel):
+    engine: str
+    uebernahmen: int
+    ablehnungen: int
+
+
+class LernStatus(BaseModel):
+    woerter: int
+    ngramme: int
+    annahmen: list[EngineAnnahme]
+
+
 class CapabilitiesAntwort(BaseModel):
     version: str
     name: str = "Federflink"

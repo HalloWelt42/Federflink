@@ -22,6 +22,8 @@ from app import config  # noqa: E402
 QUELLEN: dict[str, str] = {
     "de_DE.aff": "https://raw.githubusercontent.com/wooorm/dictionaries/main/dictionaries/de/index.aff",
     "de_DE.dic": "https://raw.githubusercontent.com/wooorm/dictionaries/main/dictionaries/de/index.dic",
+    # Haeufigkeitsliste fuer die Wortvervollstaendigung (Wort + Zaehler je Zeile).
+    "de_frequenz.txt": "https://raw.githubusercontent.com/hermitdave/FrequencyWords/master/content/2018/de/de_50k.txt",
 }
 
 

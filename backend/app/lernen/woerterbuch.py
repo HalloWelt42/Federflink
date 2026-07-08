@@ -65,6 +65,25 @@ def liste(profil_id: str | None = None, *, limit: int = 500) -> list[dict[str, o
     return [dict(z) for z in zeilen]
 
 
+def woerter_mit_praefix(
+    praefix_klein: str, *, profil_id: str = "standard", limit: int = 5
+) -> list[tuple[str, int]]:
+    """Gelernte Woerter, die mit dem Praefix beginnen (fuer die Vervollstaendigung)."""
+    if not praefix_klein:
+        return []
+    muster = praefix_klein.replace("%", "").replace("_", "") + "%"
+    with get_db().connect() as conn:
+        zeilen = conn.execute(
+            """
+            SELECT wort, haeufigkeit FROM woerter
+            WHERE lower(wort) LIKE ? AND (profil_id = ? OR profil_id = 'standard')
+            ORDER BY haeufigkeit DESC LIMIT ?
+            """,
+            (muster, profil_id, limit),
+        ).fetchall()
+    return [(z["wort"], int(z["haeufigkeit"])) for z in zeilen]
+
+
 def entfernen(wort: str, profil_id: str = "standard") -> bool:
     with get_db().connect() as conn:
         cur = conn.execute(

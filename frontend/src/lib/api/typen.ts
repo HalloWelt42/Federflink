@@ -98,3 +98,36 @@ export interface WoerterbuchListe {
   woerter: WortEintrag[]
   anzahl: number
 }
+
+export type ErgaenzungsModus = 'wort' | 'phrase' | 'satz'
+
+export interface Vorschlag {
+  id: string
+  text: string
+  engine: string
+  score: number
+  art: ErgaenzungsModus
+  ersetze_vor: number
+  anzeige_text: string | null
+  final: boolean
+}
+
+export interface ErgaenzungsAntwort {
+  request_id: string
+  erzeugt_ms: number
+  vorschlaege: Vorschlag[]
+  upgrade_aussteht: boolean
+  engine_status: Record<string, string>
+}
+
+export interface EngineAnnahme {
+  engine: string
+  uebernahmen: number
+  ablehnungen: number
+}
+
+export interface LernStatus {
+  woerter: number
+  ngramme: number
+  annahmen: EngineAnnahme[]
+}

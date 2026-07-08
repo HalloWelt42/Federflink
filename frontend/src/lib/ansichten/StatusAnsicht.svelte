@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte'
 
+  import { requestJson } from '../api/http'
   import { ladeCapabilities } from '../api/system'
-  import type { CapabilitiesAntwort } from '../api/typen'
+  import type { CapabilitiesAntwort, LernStatus } from '../api/typen'
 
   let caps = $state<CapabilitiesAntwort | null>(null)
+  let lernStatus = $state<LernStatus | null>(null)
   let fehler = $state('')
   let laedt = $state(true)
 
@@ -13,6 +15,7 @@
     fehler = ''
     try {
       caps = await ladeCapabilities()
+      lernStatus = await requestJson<LernStatus>('/api/status')
     } catch (e) {
       fehler = e instanceof Error ? e.message : String(e)
     } finally {
@@ -103,6 +106,47 @@
         <div class="kennzahl"><div class="kz-wert">{caps.grenzen.max_vorschlaege}</div><div class="kz-name">Max. Vorschlaege</div></div>
         <div class="kennzahl"><div class="kz-wert">{caps.grenzen.budget_vor}</div><div class="kz-name">Kontext vor (Zeichen)</div></div>
       </div>
+    {/if}
+  </div>
+</div>
+
+<div class="karte">
+  <div class="karte-kopf"><i class="fa-solid fa-microchip"></i> Sprachmodell</div>
+  <div class="karte-inhalt">
+    {#if caps?.llm}
+      <p>
+        <span class="status-punkt" class:aus={!caps.llm.erreichbar}></span>
+        {caps.llm.erreichbar ? 'erreichbar' : 'nicht erreichbar'} unter <code>{caps.llm.url}</code>
+      </p>
+      {#if caps.llm.modelle.length}
+        <p class="hinweis-text">{caps.llm.modelle.length} Modell(e) gemeldet.</p>
+      {/if}
+    {:else}
+      <p class="hinweis-text">Kein Modell-Status verfuegbar.</p>
+    {/if}
+  </div>
+</div>
+
+<div class="karte">
+  <div class="karte-kopf"><i class="fa-solid fa-graduation-cap"></i> Lernstand</div>
+  <div class="karte-inhalt">
+    {#if lernStatus}
+      <div class="kennzahl-raster" style="margin-bottom: var(--a3)">
+        <div class="kennzahl"><div class="kz-wert">{lernStatus.woerter}</div><div class="kz-name">Gelernte Woerter</div></div>
+        <div class="kennzahl"><div class="kz-wert">{lernStatus.ngramme}</div><div class="kz-name">N-Gramme</div></div>
+      </div>
+      {#if lernStatus.annahmen.length}
+        <table class="tabelle">
+          <thead><tr><th>Engine</th><th style="text-align:right">Uebernahmen</th><th style="text-align:right">Ablehnungen</th></tr></thead>
+          <tbody>
+            {#each lernStatus.annahmen as a (a.engine)}
+              <tr><td>{a.engine}</td><td style="text-align:right">{a.uebernahmen}</td><td style="text-align:right">{a.ablehnungen}</td></tr>
+            {/each}
+          </tbody>
+        </table>
+      {:else}
+        <p class="hinweis-text">Noch keine Uebernahmen erfasst.</p>
+      {/if}
     {/if}
   </div>
 </div>
