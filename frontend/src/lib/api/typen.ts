@@ -87,6 +87,11 @@ export interface KorrekturAntwort {
   veraendert: boolean
 }
 
+export interface SatzAntwort {
+  satz: string
+  vorschlaege: string[]
+}
+
 export interface WortEintrag {
   wort: string
   profil_id: string

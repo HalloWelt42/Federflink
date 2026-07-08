@@ -90,6 +90,26 @@ Neuronale Ganzsatz-Korrektur (nur Form, nie Inhalt). Request:
 Bei fehlendem/langsamem Modell oder verdächtiger Abweichung wird der Originaltext
 unverändert zurückgegeben (`veraendert: false`).
 
+## POST /api/satzvorschlaege
+
+Verbessert GENAU EINEN Satz, der zwar korrekt geschriebene Wörter enthält, im
+Kontext aber unlogisch oder in Wortwahl/Grammatik falsch ist. Bewusst auf einen
+Satz begrenzt - so bleibt die Anfrage klein und die (bis zu drei) Vorschläge
+stehen schnell zur Auswahl. Request:
+
+```json
+{ "satz": "Der Hund miaut laut im Garten.", "profil_id": null, "modell": null }
+```
+
+Antwort (bis zu drei Varianten; leer, wenn nichts nötig oder kein Modell erreichbar):
+
+```json
+{ "satz": "Der Hund miaut laut im Garten.",
+  "vorschlaege": ["Der Hund bellt laut im Garten.", "Im Garten bellt der Hund laut."] }
+```
+
+Braucht ein Instruct-Modell (siehe [09_MODELLE.md](09_MODELLE.md)).
+
 ## POST /api/complete
 
 Textergänzung am Cursor. Request:

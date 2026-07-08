@@ -53,3 +53,16 @@ class KorrekturAntwort(BaseModel):
     korrigiert: str
     engine: str
     veraendert: bool
+
+
+class SatzAnfrage(BaseModel):
+    """Ein einzelner Satz, der auf Sinn/Wortwahl/Grammatik geprueft werden soll."""
+
+    satz: str
+    profil_id: str | None = None
+    modell: str | None = None
+
+
+class SatzAntwort(BaseModel):
+    satz: str
+    vorschlaege: list[str] = Field(default_factory=list)

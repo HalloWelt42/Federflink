@@ -2,7 +2,7 @@
   import { onMount } from 'svelte'
 
   import { ladeCapabilities } from '../api/system'
-  import { korrigiere, pruefe } from '../api/pruefung'
+  import { korrigiere, pruefe, satzVorschlaege } from '../api/pruefung'
   import { fuegeWortHinzu } from '../api/woerterbuch'
   import type { Befund, CapabilitiesAntwort, KorrekturAntwort } from '../api/typen'
   import { wortDiff } from '../textDiff'
@@ -25,6 +25,13 @@
   let korrektur = $state<KorrekturAntwort | null>(null)
   let korrLaeuft = $state(false)
   let fehler = $state('')
+
+  let feldEl: HTMLTextAreaElement | undefined
+  let satzListe = $state<string[]>([])
+  let satzOriginal = $state('')
+  let satzGeprueft = $state(false)
+  let satzLaeuft = $state(false)
+  let satzSpan: { start: number; ende: number } | null = null
 
   const artLabel: Record<string, string> = {
     rechtschreibung: 'Rechtschreibung',
@@ -108,11 +115,69 @@
     }
   }
 
+  // Satz um den Cursor bestimmen (nur EIN Satz - das haelt die Anfrage schnell).
+  function satzSpanne(t: string, pos: number): { start: number; ende: number } {
+    const trenner = '.!?\n'
+    let start = 0
+    for (let i = Math.min(pos, t.length) - 1; i >= 0; i--) {
+      if (trenner.includes(t[i])) {
+        start = i + 1
+        break
+      }
+    }
+    let ende = t.length
+    for (let i = Math.max(0, pos); i < t.length; i++) {
+      if (trenner.includes(t[i])) {
+        ende = i + 1
+        break
+      }
+    }
+    const roh = t.slice(start, ende)
+    const vorn = roh.length - roh.trimStart().length
+    const hinten = roh.length - roh.trimEnd().length
+    return { start: start + vorn, ende: ende - hinten }
+  }
+
+  async function satzVerbessern() {
+    fehler = ''
+    satzListe = []
+    satzGeprueft = false
+    const pos = feldEl?.selectionStart ?? text.length
+    const span = satzSpanne(text, pos)
+    const satz = text.slice(span.start, span.ende)
+    if (satz.trim().length < 3) {
+      fehler = 'Kein Satz am Cursor gefunden.'
+      return
+    }
+    satzSpan = span
+    satzOriginal = satz
+    satzLaeuft = true
+    try {
+      const antwort = await satzVorschlaege(satz, profil)
+      satzListe = antwort.vorschlaege
+      satzGeprueft = true
+    } catch (e) {
+      fehler = e instanceof Error ? e.message : String(e)
+    } finally {
+      satzLaeuft = false
+    }
+  }
+
+  function satzAnwenden(variante: string) {
+    if (!satzSpan) return
+    text = text.slice(0, satzSpan.start) + variante + text.slice(satzSpan.ende)
+    satzListe = []
+    satzGeprueft = false
+    satzSpan = null
+  }
+
   function beiEingabe() {
     // Ergebnisse verwerfen, sobald der Nutzer selbst tippt (nicht bei Programmänderung).
     befunde = []
     geprueft = false
     korrektur = null
+    satzListe = []
+    satzGeprueft = false
   }
 
   const llmErreichbar = $derived(caps?.llm?.erreichbar ?? false)
@@ -150,6 +215,7 @@
     </div>
 
     <textarea
+      bind:this={feldEl}
       class="feld"
       rows="5"
       placeholder="Text zum Prüfen oder Verbessern ..."
@@ -170,6 +236,15 @@
       >
         {#if korrLaeuft}<i class="fa-solid fa-spinner spinner"></i>{:else}<i class="fa-solid fa-wand-magic-sparkles"></i>{/if}
         Text verbessern (KI)
+      </button>
+      <button
+        class="knopf"
+        onclick={satzVerbessern}
+        disabled={satzLaeuft || !text.trim() || !llmErreichbar}
+        title={llmErreichbar ? 'Den Satz am Cursor auf Sinn und Wortwahl verbessern (3 Vorschläge)' : 'Kein Sprachmodell erreichbar'}
+      >
+        {#if satzLaeuft}<i class="fa-solid fa-spinner spinner"></i>{:else}<i class="fa-solid fa-comment-dots"></i>{/if}
+        Satz verbessern
       </button>
       {#if geprueft && !pruefLaeuft}
         <span class="hinweis-text">
@@ -198,6 +273,28 @@
         </div>
       {:else}
         <p class="hinweis-text"><i class="fa-solid fa-circle-check"></i> Das Sprachmodell hat nichts zu korrigieren gefunden (oder es war nicht erreichbar - dann bleibt der Text unverändert).</p>
+      {/if}
+    </div>
+  </div>
+{/if}
+
+{#if satzGeprueft}
+  <div class="karte">
+    <div class="karte-kopf"><i class="fa-solid fa-comment-dots"></i> Satz-Vorschläge (nur der Satz am Cursor)</div>
+    <div class="karte-inhalt">
+      <p class="hinweis-text" style="margin-bottom: var(--a2)">Original: <span class="mono">{satzOriginal}</span></p>
+      {#if satzListe.length === 0}
+        <div class="leer-zustand" style="padding: var(--a4)">
+          <i class="fa-solid fa-circle-check" style="color: var(--zustand-erfolg)"></i>
+          <strong>Keine Verbesserung nötig</strong>
+          <span class="hinweis-text">Der Satz wirkt sinnvoll und stimmig.</span>
+        </div>
+      {:else}
+        {#each satzListe as v, i (i)}
+          <button class="satz-vorschlag" onclick={() => satzAnwenden(v)} title="Diesen Satz übernehmen">
+            <i class="fa-solid fa-arrow-right"></i> {v}
+          </button>
+        {/each}
       {/if}
     </div>
   </div>
@@ -327,5 +424,27 @@
     color: var(--zustand-fehler);
     text-decoration: line-through;
     border-radius: 2px;
+  }
+  .satz-vorschlag {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: var(--a2) var(--a3);
+    margin-bottom: var(--a2);
+    border: 1px solid var(--rand-2);
+    border-radius: var(--radius-knopf);
+    background: var(--flaeche-eingabe);
+    color: var(--text-1);
+    font-family: var(--schrift-anzeige);
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .satz-vorschlag i {
+    color: var(--akzent);
+    margin-right: var(--a1);
+  }
+  .satz-vorschlag:hover {
+    background: var(--akzent-weich);
+    border-color: var(--akzent);
   }
 </style>

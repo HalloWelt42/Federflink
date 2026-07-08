@@ -151,6 +151,6 @@ async def capabilities() -> CapabilitiesAntwort:
             max_vorschlaege=config.MAX_VORSCHLAEGE,
             max_text_zeichen=config.MAX_TEXT_ZEICHEN,
         ),
-        funktionen={"sse": True, "lernen": True, "teil_uebernahme": True},
+        funktionen={"sse": True, "lernen": True, "teil_uebernahme": True, "satzvorschlaege": True},
         llm=llm,
     )
