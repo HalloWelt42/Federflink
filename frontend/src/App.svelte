@@ -2,23 +2,28 @@
   import { onMount } from 'svelte'
 
   import { ladeHealth } from './lib/api/system'
+  import SpielwieseAnsicht from './lib/ansichten/SpielwieseAnsicht.svelte'
   import StatusAnsicht from './lib/ansichten/StatusAnsicht.svelte'
+  import WoerterbuchAnsicht from './lib/ansichten/WoerterbuchAnsicht.svelte'
   import { naechstesTheme, themeZustand } from './lib/theme/theme.svelte'
 
   const version = __APP_VERSION__
 
-  type AnsichtId = 'status'
+  type AnsichtId = 'spielwiese' | 'woerterbuch' | 'status'
   interface Ansicht {
     id: AnsichtId
     name: string
     icon: string
   }
 
-  // Weitere Ansichten (Spielwiese, Woerterbuch, Profile, Einstellungen) kommen
-  // mit den naechsten Phasen hinzu und werden hier ergaenzt.
-  const ansichten: Ansicht[] = [{ id: 'status', name: 'Status', icon: 'fa-gauge-high' }]
+  // Weitere Ansichten (Profile, Einstellungen) kommen mit den naechsten Phasen hinzu.
+  const ansichten: Ansicht[] = [
+    { id: 'spielwiese', name: 'Spielwiese', icon: 'fa-pen-nib' },
+    { id: 'woerterbuch', name: 'Woerterbuch', icon: 'fa-book' },
+    { id: 'status', name: 'Status', icon: 'fa-gauge-high' },
+  ]
 
-  let aktuelleAnsicht = $state<AnsichtId>('status')
+  let aktuelleAnsicht = $state<AnsichtId>('spielwiese')
 
   let backendOk = $state(false)
   let backendVersion = $state('')
@@ -81,7 +86,11 @@
 
   <main class="haupt">
     <div class="inhalt">
-      {#if aktuelleAnsicht === 'status'}
+      {#if aktuelleAnsicht === 'spielwiese'}
+        <SpielwieseAnsicht />
+      {:else if aktuelleAnsicht === 'woerterbuch'}
+        <WoerterbuchAnsicht />
+      {:else if aktuelleAnsicht === 'status'}
         <StatusAnsicht />
       {/if}
     </div>

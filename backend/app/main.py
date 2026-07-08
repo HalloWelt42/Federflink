@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app import config, registry
 from app.fehler import registriere_fehler_handler
 from app.persistence.db import get_db
-from app.routers import system
+from app.routers import correct, spellcheck, system, woerterbuch
 
 
 def create_app() -> FastAPI:
@@ -41,6 +41,9 @@ def create_app() -> FastAPI:
     registry.entdecke_module()
 
     app.include_router(system.router, prefix="/api")
+    app.include_router(spellcheck.router, prefix="/api")
+    app.include_router(correct.router, prefix="/api")
+    app.include_router(woerterbuch.router, prefix="/api")
     return app
 
 

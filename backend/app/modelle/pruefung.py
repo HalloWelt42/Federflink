@@ -30,8 +30,9 @@ class Befund(BaseModel):
 class PruefAnfrage(BaseModel):
     text: str
     sprache: str = "de-DE"
+    profil_id: str = "standard"
     engines: list[str] | None = Field(
-        default=None, description="Leer = alle aktiven Pruef-Engines"
+        default=None, description="Leer = alle standardmaessig aktiven Pruef-Engines"
     )
 
 

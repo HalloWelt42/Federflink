@@ -16,5 +16,13 @@ def health() -> HealthAntwort:
 
 
 @router.get("/capabilities")
-def capabilities() -> CapabilitiesAntwort:
-    return registry.capabilities()
+async def capabilities() -> CapabilitiesAntwort:
+    return await registry.capabilities()
+
+
+@router.get("/models")
+async def models() -> dict[str, object]:
+    """Erreichbarkeit des Modell-Servers und gemeldete Modelle."""
+    from app.services import llm_client
+
+    return await llm_client.status()

@@ -61,3 +61,40 @@ export interface CapabilitiesAntwort {
   funktionen: Record<string, boolean>
   llm: LlmStatus | null
 }
+
+export type BefundArt = 'rechtschreibung' | 'grammatik' | 'zeichensetzung' | 'stil' | 'tippfehler'
+
+export interface Befund {
+  offset: number
+  laenge: number
+  art: BefundArt
+  meldung: string
+  regel_id: string | null
+  vorschlaege: string[]
+  engine: string
+}
+
+export interface PruefAntwort {
+  befunde: Befund[]
+  engines: string[]
+  dauer_ms: number
+}
+
+export interface KorrekturAntwort {
+  original: string
+  korrigiert: string
+  engine: string
+  veraendert: boolean
+}
+
+export interface WortEintrag {
+  wort: string
+  profil_id: string
+  haeufigkeit: number
+  quelle: string
+}
+
+export interface WoerterbuchListe {
+  woerter: WortEintrag[]
+  anzahl: number
+}

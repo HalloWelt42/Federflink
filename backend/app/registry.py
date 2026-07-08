@@ -18,6 +18,7 @@ from app.modelle.system import (
     CapabilitiesAntwort,
     EngineInfo,
     Grenzen,
+    LlmStatus,
 )
 from app.profile.standard import standard_profile
 from app.schnittstellen.ergaenzungs_engine import ErgaenzungsEngine
@@ -125,7 +126,17 @@ def _sicher_verfuegbar(eintrag: object) -> bool:
         return False
 
 
-def capabilities() -> CapabilitiesAntwort:
+async def capabilities() -> CapabilitiesAntwort:
+    # LLM-Status ist kurz zwischengespeichert (siehe llm_client), damit dieser
+    # Endpunkt schnell bleibt, auch wenn kein Modell-Server laeuft.
+    from app.services import llm_client
+
+    zustand = await llm_client.status()
+    llm = LlmStatus(
+        erreichbar=bool(zustand["erreichbar"]),
+        url=str(zustand["url"]),
+        modelle=list(zustand["modelle"]),  # type: ignore[arg-type]
+    )
     return CapabilitiesAntwort(
         version=config.APP_VERSION,
         pruef_engines=_pruef_engine_infos(),
@@ -141,5 +152,5 @@ def capabilities() -> CapabilitiesAntwort:
             max_text_zeichen=config.MAX_TEXT_ZEICHEN,
         ),
         funktionen={"sse": True, "lernen": True, "teil_uebernahme": True},
-        llm=None,
+        llm=llm,
     )
