@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="kopf">
+      <span class="marke">Federflink</span>
+      <span id="status" class="status">…</span>
+    </div>
+
+    <label class="zeile">
+      <span>Global aktiv</span>
+      <input type="checkbox" id="aktiv" />
+    </label>
+    <label class="zeile">
+      <span>Auf <b id="host">dieser Seite</b> aktiv</span>
+      <input type="checkbox" id="seiteAktiv" />
+    </label>
+    <label class="zeile">
+      <span>Profil</span>
+      <select id="profil"></select>
+    </label>
+    <label class="zeile">
+      <span>Hier verbessern <small>(Kontext lernen)</small></span>
+      <input type="checkbox" id="lernen" />
+    </label>
+
+    <div class="fuss">
+      <a id="optionen" href="#">Alle Einstellungen</a>
+      <span class="hinweis">Tab uebernimmt, Esc verwirft</span>
+    </div>
+
+    <script src="../../shared/defaults.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

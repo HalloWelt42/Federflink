@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Federflink - Einstellungen</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <h1>Federflink - Einstellungen</h1>
+    <p id="status" class="status">Server: …</p>
+
+    <section>
+      <h2>Server</h2>
+      <label class="feld"><span>Server-URL</span><input type="text" id="serverUrl" /></label>
+      <p class="hinweis">
+        Standard: <code>http://localhost:8500</code>. Fuer einen zentralen Betrieb (z. B. Raspberry Pi)
+        die Adresse hier eintragen und in der manifest.json unter <code>host_permissions</code> ergaenzen.
+      </p>
+    </section>
+
+    <section>
+      <h2>Ergaenzung</h2>
+      <label class="feld"><span>Standard-Profil</span><select id="profilStandard"></select></label>
+      <label class="feld"><span>Modus</span>
+        <select id="modus">
+          <option value="wort">Wort</option>
+          <option value="phrase">Phrase</option>
+          <option value="satz">Satz</option>
+        </select>
+      </label>
+      <label class="feld"><span>Anzeige</span>
+        <select id="anzeigeModus">
+          <option value="auto">Automatisch (Geistertext, sonst Pille)</option>
+          <option value="inline">Nur Geistertext</option>
+          <option value="pille">Nur Pille</option>
+        </select>
+      </label>
+      <label class="feld"><span>Mindestzeichen</span><input type="number" id="minZeichen" min="1" max="20" /></label>
+      <label class="feld"><span>Entprellung (ms)</span><input type="number" id="debounceMs" min="0" max="2000" step="10" /></label>
+    </section>
+
+    <section>
+      <h2>Seiten</h2>
+      <p class="hinweis">
+        Pro Seite laesst sich Federflink ab- oder anschalten, ein Profil waehlen und "hier verbessern"
+        (Kontext lernen) aktivieren. Ohne "hier verbessern" wird kein Umgebungstext an den Server
+        gesendet. Passwort-, Einmalcode- und Zahlungsfelder werden nie ausgelesen.
+      </p>
+      <table id="seitenTabelle">
+        <thead>
+          <tr><th>Host</th><th>Aktiv</th><th>Profil</th><th>Kontext lernen</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p id="keineSeiten" class="hinweis">Noch keine seitenspezifischen Einstellungen.</p>
+      <div class="neu">
+        <input type="text" id="neuerHost" placeholder="Host sperren, z. B. beispiel.de" />
+        <button id="hostSperren">Host sperren</button>
+      </div>
+    </section>
+
+    <script src="../../shared/defaults.js"></script>
+    <script src="options.js"></script>
+  </body>
+</html>
