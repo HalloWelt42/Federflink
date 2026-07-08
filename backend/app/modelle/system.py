@@ -1,4 +1,4 @@
-"""Modelle fuer System-Endpunkte: Health und Capabilities.
+"""Modelle für System-Endpunkte: Health und Capabilities.
 
 Capabilities ist der Selbstauskunfts-Endpunkt: Frontend und Browser-Erweiterung
 lesen hier, welche Engines, Modi, Profile und Grenzen der Server anbietet, und
@@ -19,7 +19,7 @@ class HealthAntwort(BaseModel):
 class EngineInfo(BaseModel):
     id: str
     name: str
-    aktiv: bool = Field(description="Engine ist einsatzbereit (Abhaengigkeiten vorhanden)")
+    aktiv: bool = Field(description="Engine ist einsatzbereit (Abhängigkeiten vorhanden)")
     standard_an: bool = Field(description="Ist die Engine per Vorgabe eingeschaltet")
     streaming: bool = False
 

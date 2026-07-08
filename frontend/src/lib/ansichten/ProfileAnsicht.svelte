@@ -64,14 +64,14 @@
   <div class="karte-kopf"><i class="fa-solid fa-user-pen"></i> Schreibprofile</div>
   <div class="karte-inhalt">
     <p class="hinweis-text" style="margin-bottom: var(--a3)">
-      Ein Profil buendelt Ton/Stil, ein eigenes Woerterbuch und einen eigenen Umfeld-Kontext.
+      Ein Profil bündelt Ton/Stil, ein eigenes Wörterbuch und einen eigenen Umfeld-Kontext.
       Host-Muster (z. B. <code>*.example.org</code>) ordnen Seiten automatisch einem Profil zu.
     </p>
 
     {#if fehler}<p class="abzeichen fehler">{fehler}</p>{/if}
 
     {#if laedt}
-      <p class="hinweis-text"><i class="fa-solid fa-spinner spinner"></i> Laedt ...</p>
+      <p class="hinweis-text"><i class="fa-solid fa-spinner spinner"></i> Lädt ...</p>
     {:else}
       <table class="tabelle">
         <thead>
@@ -109,7 +109,7 @@
       <label class="feld-zeile spalte"><span class="beschriftung">Anzeigename</span><input class="feld" bind:value={neuName} placeholder="z. B. Notizen" /></label>
     </div>
     <label class="feld-zeile spalte" style="margin-top: var(--a3)">
-      <span class="beschriftung">Stilhinweis (fuer die KI-Ergaenzung)</span>
+      <span class="beschriftung">Stilhinweis (für die KI-Ergänzung)</span>
       <input class="feld" bind:value={neuStil} placeholder="z. B. knapp und sachlich" />
     </label>
     <label class="feld-zeile spalte" style="margin-top: var(--a3)">

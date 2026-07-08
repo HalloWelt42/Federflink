@@ -1,4 +1,4 @@
-"""Endpunkt Textergaenzung.
+"""Endpunkt Textergänzung.
 
 Zwei Betriebsarten je nach Accept-Header:
 - application/json (Vorgabe): nur der schnelle Instant-Vorschlag (Trie/N-Gramm).
@@ -21,7 +21,7 @@ from app.ergaenzungs_engines import llm_engine
 from app.fehler import LimitUeberschritten
 from app.modelle.ergaenzung import ErgaenzungsAnfrage, ErgaenzungsAntwort
 
-router = APIRouter(tags=["Ergaenzung"])
+router = APIRouter(tags=["Ergänzung"])
 
 
 def _frame(event: str, daten: dict[str, object]) -> str:
@@ -36,7 +36,7 @@ def _streamende_engine(anfrage: ErgaenzungsAnfrage) -> object | None:
 
 
 async def _umfeld_kontext(anfrage: ErgaenzungsAnfrage) -> str | None:
-    """Stilhinweis des Profils + aehnliche gelernte Passagen (Lernen Stufe 2)."""
+    """Stilhinweis des Profils + ähnliche gelernte Passagen (Lernen Stufe 2)."""
     from app.lernen import kontext_speicher
     from app.profile import dienst
 

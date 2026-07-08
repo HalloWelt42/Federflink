@@ -1,4 +1,4 @@
-"""Endpunkte zur Verwaltung des persoenlichen Woerterbuchs (im UI bedienbar)."""
+"""Endpunkte zur Verwaltung des persönlichen Wörterbuchs (im UI bedienbar)."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from app.modelle.woerterbuch import (
     WortEintrag,
 )
 
-router = APIRouter(tags=["Woerterbuch"])
+router = APIRouter(tags=["Wörterbuch"])
 
 
 @router.get("/woerterbuch")

@@ -1,4 +1,4 @@
-"""Modelle fuer Rechtschreibpruefung (/spellcheck) und Korrektur (/correct)."""
+"""Modelle für Rechtschreibprüfung (/spellcheck) und Korrektur (/correct)."""
 
 from __future__ import annotations
 
@@ -16,10 +16,10 @@ class BefundArt(StrEnum):
 
 
 class Befund(BaseModel):
-    """Ein einzelner Fund in einem Text: Position, Art, Vorschlaege."""
+    """Ein einzelner Fund in einem Text: Position, Art, Vorschläge."""
 
     offset: int = Field(ge=0, description="0-basierter Zeichen-Offset im Text")
-    laenge: int = Field(ge=0, description="Laenge der betroffenen Stelle in Zeichen")
+    laenge: int = Field(ge=0, description="Länge der betroffenen Stelle in Zeichen")
     art: BefundArt
     meldung: str = ""
     regel_id: str | None = None
@@ -32,13 +32,13 @@ class PruefAnfrage(BaseModel):
     sprache: str = "de-DE"
     profil_id: str = "standard"
     engines: list[str] | None = Field(
-        default=None, description="Leer = alle standardmaessig aktiven Pruef-Engines"
+        default=None, description="Leer = alle standardmäßig aktiven Prüf-Engines"
     )
 
 
 class PruefAntwort(BaseModel):
     befunde: list[Befund]
-    engines: list[str] = Field(description="Tatsaechlich ausgefuehrte Engines")
+    engines: list[str] = Field(description="Tatsächlich ausgeführte Engines")
     dauer_ms: int = 0
 
 

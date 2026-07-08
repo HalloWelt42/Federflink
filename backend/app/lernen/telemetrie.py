@@ -1,4 +1,4 @@
-"""Telemetrie: Annahme/Ablehnung je Engine (fuer Admin-Transparenz im Status)."""
+"""Telemetrie: Annahme/Ablehnung je Engine (für Admin-Transparenz im Status)."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ def erfasse(
 
 
 def zusammenfassung() -> list[dict[str, object]]:
-    """Annahmen je Engine (haeufigste zuerst) - fuer die Statusansicht."""
+    """Annahmen je Engine (häufigste zuerst) - für die Statusansicht."""
     with get_db().connect() as conn:
         zeilen = conn.execute(
             """

@@ -2,14 +2,14 @@
 
 ## Profile
 
-Ein Profil buendelt Ton/Stil (System-Hinweis fuer das LLM), ein eigenes
-Woerterbuch und einen eigenen Umfeld-Kontext. Eingebaut: `standard`, `email-de`,
+Ein Profil bündelt Ton/Stil (System-Hinweis für das LLM), ein eigenes
+Wörterbuch und einen eigenen Umfeld-Kontext. Eingebaut: `standard`, `email-de`,
 `chat-de`. Weitere lassen sich im UI anlegen. Host-Muster ordnen Seiten
 automatisch einem Profil zu (z. B. Mail-Dienste -> `email-de`).
 
 ## Konfiguration
 
-- **Serverseitig (zentral, im UI aenderbar):** aktive Engines, Schwellwerte,
+- **Serverseitig (zentral, im UI änderbar):** aktive Engines, Schwellwerte,
   Entprellung, Kontext-Budget, Modell und Endpunkt, Ranking-Gewichte, Profile.
   Liegt in der `settings`-Tabelle; Standardwerte in `backend/app/config.py`.
 - **Clientseitig (Browser-Erweiterung):** globaler Schalter, pro-Seite an/aus,

@@ -1,10 +1,10 @@
-"""Grammatik-, Zeichensetzungs- und Stilpruefung mit LanguageTool (optional).
+"""Grammatik-, Zeichensetzungs- und Stilprüfung mit LanguageTool (optional).
 
-Regelbasiert - folgt keinen Anweisungen im Text und halluziniert nicht. Benoetigt
+Regelbasiert - folgt keinen Anweisungen im Text und halluziniert nicht. Benötigt
 Java und das Paket language-tool-python (Extra 'grammatik'). Ist eines davon nicht
-vorhanden, meldet sich die Engine inaktiv; Federflink laeuft dann mit Hunspell + LLM.
+vorhanden, meldet sich die Engine inaktiv; Federflink läuft dann mit Hunspell + LLM.
 
-Standardmaessig ausgeschaltet (Java-Prozess ~1 GB) - im UI zuschaltbar.
+Standardmäßig ausgeschaltet (Java-Prozess ~1 GB) - im UI zuschaltbar.
 """
 
 from __future__ import annotations
@@ -51,7 +51,7 @@ class LanguageToolEngine:
     standard_an: ClassVar[bool] = False
 
     def ist_verfuegbar(self) -> bool:
-        """Leichtgewichtige Pruefung ohne die teure Tool-Initialisierung."""
+        """Leichtgewichtige Prüfung ohne die teure Tool-Initialisierung."""
         if shutil.which("java") is None:
             return False
         try:

@@ -36,7 +36,7 @@ async def models() -> dict[str, object]:
 
 @router.get("/status")
 def status() -> LernStatus:
-    """Lernstand: Woerter, N-Gramme und Annahmen je Engine (Admin-Transparenz)."""
+    """Lernstand: Wörter, N-Gramme und Annahmen je Engine (Admin-Transparenz)."""
     annahmen = [
         EngineAnnahme(
             engine=str(z["engine"] or "-"),

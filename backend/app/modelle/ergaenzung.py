@@ -1,7 +1,7 @@
-"""Modelle fuer die Textergaenzung (/complete) und das Lernsignal (/learn).
+"""Modelle für die Textergänzung (/complete) und das Lernsignal (/learn).
 
-Die JSON-Schluessel sind bewusst deutsch und ASCII gehalten; sie bilden den
-stabilen Vertrag zwischen Server, Browser-Erweiterung und kuenftigen Clients
+Die JSON-Schlüssel sind bewusst deutsch und ASCII gehalten; sie bilden den
+stabilen Vertrag zwischen Server, Browser-Erweiterung und künftigen Clients
 (siehe docs/02_API.md).
 """
 
@@ -24,7 +24,7 @@ class Cursorlage(BaseModel):
 
 
 class SeitenKontext(BaseModel):
-    """Herkunfts-Metadaten des Feldes (fuer Profilwahl und Telemetrie)."""
+    """Herkunfts-Metadaten des Feldes (für Profilwahl und Telemetrie)."""
 
     host: str = ""
     feld_art: str = ""  # input | textarea | contenteditable
@@ -69,7 +69,7 @@ class ErgaenzungsAntwort(BaseModel):
 
 
 class LernAnfrage(BaseModel):
-    """Signal bei Uebernahme eines Vorschlags (oder abgelehntem Vorschlag)."""
+    """Signal bei Übernahme eines Vorschlags (oder abgelehntem Vorschlag)."""
 
     request_id: str = ""
     sitzung_id: str = ""

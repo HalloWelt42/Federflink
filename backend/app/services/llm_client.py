@@ -1,12 +1,12 @@
 """Anbindung an einen lokalen, OpenAI-kompatiblen Server (LM Studio / Ollama / llama.cpp).
 
 Kernpunkte:
-- JIT-sichere Modellwahl: bevorzugt das tatsaechlich GELADENE Modell (native
+- JIT-sichere Modellwahl: bevorzugt das tatsächlich GELADENE Modell (native
   /api/v0/models von LM Studio), damit nicht versehentlich ein anderes per
-  JIT-Loading geladen wird. Faellt diese Auskunft weg (z. B. Ollama), wird das
+  JIT-Loading geladen wird. Fällt diese Auskunft weg (z. B. Ollama), wird das
   konfigurierte bzw. erste gemeldete Modell genutzt.
 - SSRF-Schutz: die Basis-URL muss auf localhost/privates Netz zeigen.
-- Nicht-streamend (chat) fuer Korrektur; Streaming ergaenzt Phase 3.
+- Nicht-streamend (chat) für Korrektur; Streaming ergänzt Phase 3.
 """
 
 from __future__ import annotations
@@ -34,7 +34,7 @@ def pruefe_url(url: str) -> None:
     """Erlaubt nur http/https auf loopback oder private Adressen (SSRF-Schutz)."""
     zerlegt = urlparse(url)
     if zerlegt.scheme not in ("http", "https"):
-        raise LlmFehler(f"Ungueltiges Schema: {zerlegt.scheme}")
+        raise LlmFehler(f"Ungültiges Schema: {zerlegt.scheme}")
     host = zerlegt.hostname or ""
     if host in ("localhost", "127.0.0.1", "::1"):
         return
@@ -78,16 +78,16 @@ async def geladene_chat_modelle(url: str | None = None, timeout: float = 2.0) ->
     ]
 
 
-# Modell-Namensteile, die auf ein NICHT fuer Chat/Korrektur geeignetes Modell deuten.
+# Modell-Namensteile, die auf ein NICHT für Chat/Korrektur geeignetes Modell deuten.
 _AUSSCHLUSS = ("embed", "rerank", "image", "-vl", "vl-", "vision", "ocr", "whisper", "tts", "edit")
 
 
 async def resolve_chat_modell(url: str | None = None, preferred: str | None = None) -> str:
     """Bestimmt ein Chat-Modell.
 
-    Reihenfolge: ausdruecklich uebergeben -> aktuell GELADENES Modell (kein JIT) ->
-    konfigurierter Default -> bestes gemeldetes Modell (loest JIT aus). Bei der
-    letzten Stufe werden Embedding-/Bild-/Vision-Modelle uebersprungen und
+    Reihenfolge: ausdrücklich übergeben -> aktuell GELADENES Modell (kein JIT) ->
+    konfigurierter Default -> bestes gemeldetes Modell (löst JIT aus). Bei der
+    letzten Stufe werden Embedding-/Bild-/Vision-Modelle übersprungen und
     Instruct-Modelle bevorzugt, damit nicht versehentlich ein ungeeignetes (z. B.
     Reasoning-/Bild-)Modell geladen wird.
     """
@@ -236,7 +236,7 @@ _STATUS_TTL = 5.0
 
 
 def zuletzt_erreichbar() -> bool:
-    """Letzter bekannter Erreichbarkeitszustand ohne Netzaufruf (fuer ist_verfuegbar).
+    """Letzter bekannter Erreichbarkeitszustand ohne Netzaufruf (für ist_verfuegbar).
 
     Ohne bisherigen Status optimistisch True - ein echter Ausfall wird beim Aufruf
     ohnehin sauber abgefangen.

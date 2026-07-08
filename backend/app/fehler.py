@@ -1,6 +1,6 @@
 """Fehlertaxonomie und FastAPI-Exception-Handler.
 
-Jede fachliche Ausnahme traegt einen stabilen Maschinen-Code und einen HTTP-Status;
+Jede fachliche Ausnahme trägt einen stabilen Maschinen-Code und einen HTTP-Status;
 die Handler formen alles in das einheitliche FehlerAntwort-Modell um.
 """
 
@@ -54,7 +54,7 @@ class LlmNichtErreichbar(FederflinkFehler):
 
 
 class LlmAntwortUngueltig(FederflinkFehler):
-    """Die Antwort des Sprachmodells liess sich nicht auswerten."""
+    """Die Antwort des Sprachmodells ließ sich nicht auswerten."""
 
     code = "llm_antwort_ungueltig"
     status = 502
@@ -90,7 +90,7 @@ def registriere_fehler_handler(app: FastAPI) -> None:
         einzelheiten: dict[str, Any] = {"felder": felder}
         detail = FehlerDetail(
             code="eingabe_ungueltig",
-            meldung="Die Anfrage ist ungueltig - Details unter 'felder'.",
+            meldung="Die Anfrage ist ungültig - Details unter 'felder'.",
             details=einzelheiten,
             request_id=_request_id(request),
         )

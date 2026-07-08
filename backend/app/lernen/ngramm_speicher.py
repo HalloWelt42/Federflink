@@ -1,8 +1,8 @@
-"""N-Gramm-Speicher (Lernen Stufe 1): sagt das naechste Wort voraus.
+"""N-Gramm-Speicher (Lernen Stufe 1): sagt das nächste Wort voraus.
 
-Lernt online aus uebernommenem Text. Der Praefix (die n-1 vorangehenden Woerter)
-wird zum Vergleich klein geschrieben; das vorhergesagte Wort behaelt seine
-gelernte Schreibung (wichtig fuer gross geschriebene Substantive).
+Lernt online aus übernommenem Text. Der Präfix (die n-1 vorangehenden Wörter)
+wird zum Vergleich klein geschrieben; das vorhergesagte Wort behält seine
+gelernte Schreibung (wichtig für groß geschriebene Substantive).
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ def _jetzt() -> str:
 
 
 def lerne_text(text: str, *, profil_id: str = "standard") -> int:
-    """Zaehlt alle Bi-/Trigramme des Textes hoch. Liefert die Zahl gelernter N-Gramme."""
+    """Zählt alle Bi-/Trigramme des Textes hoch. Liefert die Zahl gelernter N-Gramme."""
     ws = tokens.woerter(text)[:_MAX_WORTE_JE_LERNVORGANG]
     if len(ws) < 2:
         return 0
@@ -65,11 +65,11 @@ def _abfrage(praefix_woerter: list[str], n: int, profil_id: str, top: int) -> li
 def vorhersage_naechstes(
     vorher_woerter: list[str], *, profil_id: str = "standard", top: int = 5
 ) -> list[tuple[str, int]]:
-    """Naechstes Wort: bevorzugt Trigramm, faellt auf Bigramm zurueck."""
+    """Nächstes Wort: bevorzugt Trigramm, fällt auf Bigramm zurück."""
     ergebnis: dict[str, int] = {}
     for n in (3, 2):
         for wort, h in _abfrage(vorher_woerter, n, profil_id, top):
-            # Hoehere Ordnung zaehlt staerker (einfache Gewichtung).
+            # Höhere Ordnung zählt stärker (einfache Gewichtung).
             ergebnis[wort] = ergebnis.get(wort, 0) + h * (2 if n == 3 else 1)
     return sorted(ergebnis.items(), key=lambda kv: kv[1], reverse=True)[:top]
 
@@ -77,7 +77,7 @@ def vorhersage_naechstes(
 def vorhersage_phrase(
     vorher_woerter: list[str], *, profil_id: str = "standard", max_woerter: int = 3, min_count: int = 2
 ) -> list[str]:
-    """Greedy-Fortsetzung ueber mehrere Woerter, solange sie hinreichend belegt ist."""
+    """Greedy-Fortsetzung über mehrere Wörter, solange sie hinreichend belegt ist."""
     phrase: list[str] = []
     kontext = list(vorher_woerter)
     for _ in range(max_woerter):

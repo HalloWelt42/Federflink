@@ -20,8 +20,8 @@
 
   const ansichten: Ansicht[] = [
     { id: 'spielwiese', name: 'Rechtschreibung', icon: 'fa-spell-check' },
-    { id: 'ergaenzung', name: 'Ergaenzung', icon: 'fa-wand-sparkles' },
-    { id: 'woerterbuch', name: 'Woerterbuch', icon: 'fa-book' },
+    { id: 'ergaenzung', name: 'Ergänzung', icon: 'fa-wand-sparkles' },
+    { id: 'woerterbuch', name: 'Wörterbuch', icon: 'fa-book' },
     { id: 'profile', name: 'Profile', icon: 'fa-user-pen' },
     { id: 'status', name: 'Status', icon: 'fa-gauge-high' },
   ]
@@ -107,7 +107,7 @@
     <span class="status-punkt" class:aus={!backendOk}></span>
     <span>{backendOk ? `Backend verbunden (v${backendVersion})` : 'Backend nicht erreichbar'}</span>
     <div class="status-rechts">
-      <span>Federflink - Rechtschreibung und Textergaenzung</span>
+      <span>Federflink - Rechtschreibung und Textergänzung</span>
     </div>
   </footer>
 </div>

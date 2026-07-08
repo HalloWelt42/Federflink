@@ -1,9 +1,9 @@
-"""Haeufigkeits-Index fuer die Wortvervollstaendigung (Trie-Ersatz per bisect).
+"""Häufigkeits-Index für die Wortvervollständigung (Trie-Ersatz per bisect).
 
-Laedt die deutsche Haeufigkeitsliste (data/woerterbuecher/de_frequenz.txt) einmalig
-in eine sortierte Liste + Haeufigkeits-Tabelle. Praefix-Suchen laufen ueber bisect
-und werden nach Haeufigkeit sortiert. Alles klein geschrieben - die korrekte
-Gross-/Kleinschreibung ergibt sich beim Vorschlag aus dem bereits getippten Praefix.
+Lädt die deutsche Häufigkeitsliste (data/woerterbuecher/de_frequenz.txt) einmalig
+in eine sortierte Liste + Häufigkeits-Tabelle. Präfix-Suchen laufen über bisect
+und werden nach Häufigkeit sortiert. Alles klein geschrieben - die korrekte
+Groß-/Kleinschreibung ergibt sich beim Vorschlag aus dem bereits getippten Präfix.
 """
 
 from __future__ import annotations
@@ -36,14 +36,14 @@ def verfuegbar() -> bool:
 
 
 def vervollstaendige(praefix_klein: str, top: int = 5) -> list[tuple[str, int]]:
-    """Liefert (Wort, Haeufigkeit) fuer Woerter, die mit dem Praefix beginnen."""
+    """Liefert (Wort, Häufigkeit) für Wörter, die mit dem Präfix beginnen."""
     woerter, freq = _index()
     if not woerter or not praefix_klein:
         return []
     links = bisect.bisect_left(woerter, praefix_klein)
     rechts = bisect.bisect_left(woerter, praefix_klein + "￿")
     treffer = woerter[links:rechts]
-    # Das identische Wort (Praefix == Wort) ist keine Vervollstaendigung.
+    # Das identische Wort (Präfix == Wort) ist keine Vervollständigung.
     treffer = [w for w in treffer if w != praefix_klein]
     treffer.sort(key=lambda w: freq.get(w, 0), reverse=True)
     return [(w, freq.get(w, 0)) for w in treffer[:top]]

@@ -134,7 +134,7 @@
 </script>
 
 <div class="karte">
-  <div class="karte-kopf"><i class="fa-solid fa-wand-sparkles"></i> Ergaenzung ausprobieren</div>
+  <div class="karte-kopf"><i class="fa-solid fa-wand-sparkles"></i> Ergänzung ausprobieren</div>
   <div class="karte-inhalt">
     <div class="leiste">
       <label class="feld-zeile">
@@ -153,7 +153,7 @@
       </label>
       <span style="flex:1"></span>
       {#if lernStatus}
-        <span class="abzeichen"><i class="fa-solid fa-graduation-cap"></i> {lernStatus.woerter} Woerter - {lernStatus.ngramme} N-Gramme</span>
+        <span class="abzeichen"><i class="fa-solid fa-graduation-cap"></i> {lernStatus.woerter} Wörter - {lernStatus.ngramme} N-Gramme</span>
       {/if}
     </div>
 
@@ -171,18 +171,18 @@
         onkeyup={synchronisiereCaret}
         onclick={synchronisiereCaret}
         onscroll={spiegelScroll}
-        placeholder="Tippe los ... Vorschlag mit Tab uebernehmen."
+        placeholder="Tippe los ... Vorschlag mit Tab übernehmen."
       ></textarea>
     </div>
 
     <div class="leiste">
       {#if vorschlag}
         <button class="knopf primaer" onclick={() => uebernehmen(vorschlag)}>
-          <i class="fa-solid fa-check"></i> Uebernehmen (Tab)
+          <i class="fa-solid fa-check"></i> Übernehmen (Tab)
         </button>
         <span class="hinweis-text">Vorschlag von <strong>{vorschlag.engine}</strong> (Score {vorschlag.score.toFixed(2)}){amEnde ? '' : ' - Cursor nicht am Ende, daher nur unten angezeigt'}</span>
       {:else}
-        <span class="hinweis-text">Noch kein Vorschlag - tippe weiter. N-Gramme lernst du durch Uebernehmen dazu.</span>
+        <span class="hinweis-text">Noch kein Vorschlag - tippe weiter. N-Gramme lernst du durch Übernehmen dazu.</span>
       {/if}
     </div>
 

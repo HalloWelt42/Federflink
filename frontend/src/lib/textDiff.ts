@@ -1,7 +1,7 @@
 /**
- * Wortweiser Diff fuer die Korrektur-Vorschau (gruen = hinzugefuegt,
- * rot durchgestrichen = entfernt, sonst unveraendert). LCS ueber Tokens
- * (Woerter und Zwischenraeume), ausreichend fuer kurze Texte.
+ * Wortweiser Diff für die Korrektur-Vorschau (grün = hinzugefügt,
+ * rot durchgestrichen = entfernt, sonst unverändert). LCS über Tokens
+ * (Wörter und Zwischenräume), ausreichend für kurze Texte.
  */
 
 export type DiffTeil = { typ: 'gleich' | 'hinzu' | 'weg'; text: string }
@@ -16,7 +16,7 @@ export function wortDiff(a: string, b: string): DiffTeil[] {
   const n = at.length
   const m = bt.length
 
-  // LCS-Laengentabelle
+  // LCS-Längentabelle
   const dp: number[][] = Array.from({ length: n + 1 }, () => new Array<number>(m + 1).fill(0))
   for (let i = n - 1; i >= 0; i--) {
     for (let j = m - 1; j >= 0; j--) {

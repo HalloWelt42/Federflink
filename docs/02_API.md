@@ -1,12 +1,12 @@
 # Federflink - HTTP-API
 
-Basis-Praefix: `/api`. Alle Antworten sind JSON (UTF-8). Der Server lauscht nur
+Basis-Präfix: `/api`. Alle Antworten sind JSON (UTF-8). Der Server lauscht nur
 auf localhost. Eine maschinenlesbare Fassung liegt unter `/openapi.json`
-(interaktiv unter `/docs`). JSON-Schluessel sind bewusst deutsch und ASCII.
+(interaktiv unter `/docs`). JSON-Schlüssel sind bewusst deutsch und ASCII.
 
 ## Fehlerformat
 
-Jeder Fehler kommt einheitlich, zusaetzlich im Header `X-Request-Id`:
+Jeder Fehler kommt einheitlich, zusätzlich im Header `X-Request-Id`:
 
 ```json
 { "fehler": { "code": "engine_nicht_verfuegbar", "meldung": "...", "details": {}, "request_id": "uuid" } }
@@ -59,24 +59,24 @@ Lernstand und Telemetrie (Admin-Transparenz).
 
 ## POST /api/spellcheck
 
-Rechtschreib-/Grammatikpruefung. Request:
+Rechtschreib-/Grammatikprüfung. Request:
 
 ```json
 { "text": "Das ist ein Fehlar.", "sprache": "de-DE", "profil_id": "standard", "engines": null }
 ```
 
-`engines: null` = alle standardmaessig aktiven Pruef-Engines. Antwort:
+`engines: null` = alle standardmäßig aktiven Prüf-Engines. Antwort:
 
 ```json
 { "befunde": [ { "offset": 12, "laenge": 6, "art": "rechtschreibung",
-                 "meldung": "Moegliche falsche Schreibweise: Fehlar",
+                 "meldung": "Mögliche falsche Schreibweise: Fehlar",
                  "regel_id": null, "vorschlaege": ["Fehler", "Fehlart"], "engine": "hunspell" } ],
   "engines": ["hunspell"], "dauer_ms": 8 }
 ```
 
 `art` ∈ `rechtschreibung | grammatik | zeichensetzung | stil | tippfehler`.
-`offset`/`laenge` beziehen sich auf den gesendeten Text (Zeichen). Woerter aus dem
-persoenlichen Woerterbuch des Profils werden nicht gemeldet.
+`offset`/`laenge` beziehen sich auf den gesendeten Text (Zeichen). Wörter aus dem
+persönlichen Wörterbuch des Profils werden nicht gemeldet.
 
 ## POST /api/correct
 
@@ -87,12 +87,12 @@ Neuronale Ganzsatz-Korrektur (nur Form, nie Inhalt). Request:
 { "original": "...", "korrigiert": "...", "engine": "llm", "veraendert": true }
 ```
 
-Bei fehlendem/langsamem Modell oder verdaechtiger Abweichung wird der Originaltext
-unveraendert zurueckgegeben (`veraendert: false`).
+Bei fehlendem/langsamem Modell oder verdächtiger Abweichung wird der Originaltext
+unverändert zurückgegeben (`veraendert: false`).
 
 ## POST /api/complete
 
-Textergaenzung am Cursor. Request:
+Textergänzung am Cursor. Request:
 
 ```json
 {
@@ -116,11 +116,11 @@ Zwei Betriebsarten je nach `Accept`-Header:
   "upgrade_aussteht": true, "engine_status": { "trie": "ok", "ngram": "ok" } }
 ```
 
-Wichtig: `text` ist der einzufuegende String. Bei der Trie-Engine ist das nur das
-fehlende Wortende (Suffix), das direkt an den Cursor angehaengt wird; die N-Gramm-/
-LLM-Engine bringen ein fuehrendes Leerzeichen bereits mit, wo noetig.
+Wichtig: `text` ist der einzufügende String. Bei der Trie-Engine ist das nur das
+fehlende Wortende (Suffix), das direkt an den Cursor angehängt wird; die N-Gramm-/
+LLM-Engine bringen ein führendes Leerzeichen bereits mit, wo nötig.
 
-### text/event-stream - Progressive Enhancement (empfohlen fuer Live-Tippen)
+### text/event-stream - Progressive Enhancement (empfohlen für Live-Tippen)
 
 ```
 event: instant
@@ -137,12 +137,12 @@ data: {"request_id":"c7f2"}
 ```
 
 Der Client zeigt den `instant`-Vorschlag sofort und ersetzt ihn beim `upgrade`
-(sofern `request_id` noch aktuell und der Kontext unveraendert ist). Bricht der
+(sofern `request_id` noch aktuell und der Kontext unverändert ist). Bricht der
 Client die Verbindung ab, endet die Generierung serverseitig.
 
 ## POST /api/learn
 
-Lernsignal bei Uebernahme (oder Ablehnung). Request:
+Lernsignal bei Übernahme (oder Ablehnung). Request:
 
 ```json
 { "uebernommen_text": "el", "uebernommen_engine": "trie", "teil_uebernahme": false,
@@ -152,13 +152,13 @@ Lernsignal bei Uebernahme (oder Ablehnung). Request:
 
 `text_vor` NUR senden, wenn der Nutzer pro Seite "hier verbessern" erlaubt hat
 (Datenschutz-Gate). Ist es gesetzt, werden N-Gramme aus dem Umfeld und - bei
-mehrwortigen Uebernahmen - eine eingebettete Kontext-Passage gelernt. Unbekannte
-Woerter wandern immer ins persoenliche Woerterbuch. Antwort:
+mehrwortigen Übernahmen - eine eingebettete Kontext-Passage gelernt. Unbekannte
+Wörter wandern immer ins persönliche Wörterbuch. Antwort:
 `{ "gelernt": true, "hinweis": "..." }`.
 
 ---
 
-## Woerterbuch
+## Wörterbuch
 
 - `GET /api/woerterbuch?profil_id=standard` -> `{ "woerter": [{ "wort","profil_id","haeufigkeit","quelle" }], "anzahl": 42 }`
 - `POST /api/woerterbuch` `{ "wort": "Federflink", "profil_id": "standard" }` -> `WortEintrag`
@@ -168,5 +168,5 @@ Woerter wandern immer ins persoenliche Woerterbuch. Antwort:
 
 - `GET /api/profiles` -> Liste von `{ id,name,sprache,beschreibung,stil_prompt,host_muster,aktiv,eingebaut }`
 - `POST /api/profiles` `{ id,name,sprache?,beschreibung?,stil_prompt?,host_muster? }` -> `Profil`
-- `DELETE /api/profiles/{id}` -> `{ "entfernt": true }` (eingebaute Profile sind geschuetzt)
+- `DELETE /api/profiles/{id}` -> `{ "entfernt": true }` (eingebaute Profile sind geschützt)
 - `GET /api/profiles/host?host=mail.example.org` -> `{ "profil_id": "email-de" | null }`

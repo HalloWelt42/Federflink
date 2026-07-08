@@ -47,11 +47,11 @@
         </div>
         <div class="kennzahl">
           <div class="kz-wert">{caps.pruef_engines.length}</div>
-          <div class="kz-name">Pruef-Engines</div>
+          <div class="kz-name">Prüf-Engines</div>
         </div>
         <div class="kennzahl">
           <div class="kz-wert">{caps.ergaenzungs_engines.length}</div>
-          <div class="kz-name">Ergaenzungs-Engines</div>
+          <div class="kz-name">Ergänzungs-Engines</div>
         </div>
         <div class="kennzahl">
           <div class="kz-wert">{caps.profile.length}</div>
@@ -63,8 +63,8 @@
         <h3 style="margin:0 0 var(--a2); font-size:0.95rem">Engines</h3>
         {#if caps.pruef_engines.length === 0 && caps.ergaenzungs_engines.length === 0}
           <p class="hinweis-text">
-            Noch keine Engines registriert. Rechtschreibung und Ergaenzung folgen in den
-            naechsten Ausbaustufen.
+            Noch keine Engines registriert. Rechtschreibung und Ergänzung folgen in den
+            nächsten Ausbaustufen.
           </p>
         {:else}
           <table class="tabelle">
@@ -75,7 +75,7 @@
               {#each caps.pruef_engines as e (e.id)}
                 <tr>
                   <td>{e.name}</td>
-                  <td>Pruefung</td>
+                  <td>Prüfung</td>
                   <td><span class="abzeichen {e.aktiv ? 'gut' : 'fehler'}">{e.aktiv ? 'ja' : 'nein'}</span></td>
                   <td>{e.standard_an ? 'ja' : 'nein'}</td>
                 </tr>
@@ -83,7 +83,7 @@
               {#each caps.ergaenzungs_engines as e (e.id)}
                 <tr>
                   <td>{e.name}</td>
-                  <td>Ergaenzung</td>
+                  <td>Ergänzung</td>
                   <td><span class="abzeichen {e.aktiv ? 'gut' : 'fehler'}">{e.aktiv ? 'ja' : 'nein'}</span></td>
                   <td>{e.standard_an ? 'ja' : 'nein'}</td>
                 </tr>
@@ -103,7 +103,7 @@
       <div class="kennzahl-raster">
         <div class="kennzahl"><div class="kz-wert">{caps.grenzen.debounce_ms}</div><div class="kz-name">Entprellung (ms)</div></div>
         <div class="kennzahl"><div class="kz-wert">{caps.grenzen.min_zeichen}</div><div class="kz-name">Min. Zeichen</div></div>
-        <div class="kennzahl"><div class="kz-wert">{caps.grenzen.max_vorschlaege}</div><div class="kz-name">Max. Vorschlaege</div></div>
+        <div class="kennzahl"><div class="kz-wert">{caps.grenzen.max_vorschlaege}</div><div class="kz-name">Max. Vorschläge</div></div>
         <div class="kennzahl"><div class="kz-wert">{caps.grenzen.budget_vor}</div><div class="kz-name">Kontext vor (Zeichen)</div></div>
       </div>
     {/if}
@@ -122,7 +122,7 @@
         <p class="hinweis-text">{caps.llm.modelle.length} Modell(e) gemeldet.</p>
       {/if}
     {:else}
-      <p class="hinweis-text">Kein Modell-Status verfuegbar.</p>
+      <p class="hinweis-text">Kein Modell-Status verfügbar.</p>
     {/if}
   </div>
 </div>
@@ -132,13 +132,13 @@
   <div class="karte-inhalt">
     {#if lernStatus}
       <div class="kennzahl-raster" style="margin-bottom: var(--a3)">
-        <div class="kennzahl"><div class="kz-wert">{lernStatus.woerter}</div><div class="kz-name">Gelernte Woerter</div></div>
+        <div class="kennzahl"><div class="kz-wert">{lernStatus.woerter}</div><div class="kz-name">Gelernte Wörter</div></div>
         <div class="kennzahl"><div class="kz-wert">{lernStatus.ngramme}</div><div class="kz-name">N-Gramme</div></div>
         <div class="kennzahl"><div class="kz-wert">{lernStatus.kontext}</div><div class="kz-name">Kontext-Passagen</div></div>
       </div>
       {#if lernStatus.annahmen.length}
         <table class="tabelle">
-          <thead><tr><th>Engine</th><th style="text-align:right">Uebernahmen</th><th style="text-align:right">Ablehnungen</th></tr></thead>
+          <thead><tr><th>Engine</th><th style="text-align:right">Übernahmen</th><th style="text-align:right">Ablehnungen</th></tr></thead>
           <tbody>
             {#each lernStatus.annahmen as a (a.engine)}
               <tr><td>{a.engine}</td><td style="text-align:right">{a.uebernahmen}</td><td style="text-align:right">{a.ablehnungen}</td></tr>
@@ -146,7 +146,7 @@
           </tbody>
         </table>
       {:else}
-        <p class="hinweis-text">Noch keine Uebernahmen erfasst.</p>
+        <p class="hinweis-text">Noch keine Übernahmen erfasst.</p>
       {/if}
     {/if}
   </div>

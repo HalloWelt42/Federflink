@@ -28,5 +28,5 @@ def entfernen(profil_id: str) -> EntfernErgebnis:
 
 @router.get("/profiles/host")
 def profil_fuer_host(host: str) -> dict[str, str | None]:
-    """Ordnet einem Host per Muster ein Profil zu (fuer die Browser-Erweiterung)."""
+    """Ordnet einem Host per Muster ein Profil zu (für die Browser-Erweiterung)."""
     return {"profil_id": dienst.host_zu_profil(host)}

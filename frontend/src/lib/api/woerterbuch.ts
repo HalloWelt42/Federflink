@@ -1,4 +1,4 @@
-/** API: persoenliches Woerterbuch. */
+/** API: persönliches Wörterbuch. */
 
 import { requestJson } from './http'
 import type { WoerterbuchListe, WortEintrag } from './typen'

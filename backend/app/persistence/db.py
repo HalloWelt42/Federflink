@@ -1,9 +1,9 @@
 """SQLite-Verbindungsverwaltung und Schema-Initialisierung.
 
 Die Database-Klasse kapselt den Pfad zur SQLite-Datei und liefert frische
-Verbindungen via Kontext-Manager. Fremdschluessel-Checks, WAL-Journal und
-Busy-Timeout werden bei jeder Verbindung gesetzt (WAL fuer bessere
-Nebenlaeufigkeit von Lese-/Lernschreib-Anfragen auf lokalem Dateisystem).
+Verbindungen via Kontext-Manager. Fremdschlüssel-Checks, WAL-Journal und
+Busy-Timeout werden bei jeder Verbindung gesetzt (WAL für bessere
+Nebenläufigkeit von Lese-/Lernschreib-Anfragen auf lokalem Dateisystem).
 """
 
 from __future__ import annotations
@@ -29,7 +29,7 @@ class Database:
 
     @contextmanager
     def connect(self) -> Iterator[sqlite3.Connection]:
-        """Oeffnet eine Verbindung; committet bei Erfolg, rollback bei Fehler."""
+        """Öffnet eine Verbindung; committet bei Erfolg, rollback bei Fehler."""
         conn = sqlite3.connect(str(self._path), check_same_thread=False, timeout=5.0)
         conn.row_factory = sqlite3.Row
         conn.execute("PRAGMA foreign_keys = ON")

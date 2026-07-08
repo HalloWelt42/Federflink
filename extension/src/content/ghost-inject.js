@@ -1,8 +1,8 @@
 /**
- * MAIN-World-Helfer: fuegt beim Uebernehmen Text robust in Framework-Felder
+ * MAIN-World-Helfer: fügt beim Übernehmen Text robust in Framework-Felder
  * (React/Vue u. a.) ein, indem der native value-Setter des Prototyps aufgerufen
- * und ein echtes input-Event ausgeloest wird. Laeuft in der Seitenwelt, weil das
- * isolierte Content-Skript den Wert-Tracker mancher Frameworks nicht ausloest.
+ * und ein echtes input-Event ausgelöst wird. Läuft in der Seitenwelt, weil das
+ * isolierte Content-Skript den Wert-Tracker mancher Frameworks nicht auslöst.
  *
  * Nachrichten kommen per window.postMessage mit Namensraum '__FEDERFLINK__'.
  */

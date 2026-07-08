@@ -1,6 +1,6 @@
 # Federflink - Architektur
 
-Der Ueberblick der Schichten steht in [00_UEBERBLICK.md](00_UEBERBLICK.md).
+Der Überblick der Schichten steht in [00_UEBERBLICK.md](00_UEBERBLICK.md).
 
 ## Backend-Aufbau
 
@@ -9,14 +9,14 @@ Der Ueberblick der Schichten steht in [00_UEBERBLICK.md](00_UEBERBLICK.md).
   baut die `capabilities()`-Antwort.
 - `app/schnittstellen/` - die Protokolle `PruefEngine` und `ErgaenzungsEngine`.
 - `app/pruef_engines/` - eine Datei je Rechtschreib-/Grammatik-Verfahren.
-- `app/ergaenzungs_engines/` - eine Datei je Ergaenzungs-Verfahren.
-- `app/dispatcher.py` - fuehrt Ergaenzungs-Engines aus, mischt und rankt.
-- `app/lernen/` - Woerterbuch, N-Gramm, Umfeld-Kontext, Telemetrie.
+- `app/ergaenzungs_engines/` - eine Datei je Ergänzungs-Verfahren.
+- `app/dispatcher.py` - führt Ergänzungs-Engines aus, mischt und rankt.
+- `app/lernen/` - Wörterbuch, N-Gramm, Umfeld-Kontext, Telemetrie.
 - `app/profile/` - Schreibprofile.
 - `app/services/` - LLM-Client, Korrektur, zentrale Einstellungen.
 - `app/persistence/` - SQLite (Schema + Verbindungen).
 
-## Datenfluss der Ergaenzung
+## Datenfluss der Ergänzung
 
 1. Client sendet Kontext um den Cursor an `POST /api/complete`.
 2. Dispatcher fragt schnelle Engines (Trie/N-Gramm) - Instant-Vorschlag.
@@ -25,6 +25,6 @@ Der Ueberblick der Schichten steht in [00_UEBERBLICK.md](00_UEBERBLICK.md).
 
 ## Graceful Degradation
 
-Jede Engine kapselt ihre Fehler. Faellt die LLM-Engine oder LanguageTool aus,
-bleiben Hunspell bzw. Trie/N-Gramm aktiv. Der Client erfaehrt den Zustand ueber
+Jede Engine kapselt ihre Fehler. Fällt die LLM-Engine oder LanguageTool aus,
+bleiben Hunspell bzw. Trie/N-Gramm aktiv. Der Client erfährt den Zustand über
 `capabilities` und `engine_status`.

@@ -1,4 +1,4 @@
-/** API: Rechtschreibpruefung und Korrektur. */
+/** API: Rechtschreibprüfung und Korrektur. */
 
 import { requestJson } from './http'
 import type { KorrekturAntwort, PruefAntwort } from './typen'

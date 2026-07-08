@@ -1,14 +1,12 @@
-# Federflink - Eigene Engine hinzufuegen
-
-> Wird ausgebaut, sobald die ersten Engines stehen (Phase 1/2).
+# Federflink - Eigene Engine hinzufügen
 
 ## Prinzip
 
-Eine Engine = eine Datei im passenden Paket. Der Import beim Start loest den
+Eine Engine = eine Datei im passenden Paket. Der Import beim Start löst den
 Dekorator aus, der Capabilities-Endpunkt macht sie bekannt. Kein weiterer Code
-im Aufrufer noetig.
+im Aufrufer nötig.
 
-## Pruef-Engine (Rechtschreibung/Grammatik)
+## Prüf-Engine (Rechtschreibung/Grammatik)
 
 Vertrag: `app/schnittstellen/pruef_engine.py`
 
@@ -32,7 +30,7 @@ class MeineEngine:
 
 Datei ablegen unter `app/pruef_engines/meine_engine.py`.
 
-## Ergaenzungs-Engine (Textvervollstaendigung)
+## Ergänzungs-Engine (Textvervollständigung)
 
 Vertrag: `app/schnittstellen/ergaenzungs_engine.py`. Analog, mit
 `async def ergaenze(self, anfrage, kontext) -> list[Vorschlag]` und

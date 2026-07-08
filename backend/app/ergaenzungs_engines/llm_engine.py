@@ -1,8 +1,8 @@
-"""Kontextsensitive Textergaenzung ueber ein lokales Sprachmodell.
+"""Kontextsensitive Textergänzung über ein lokales Sprachmodell.
 
 Streamt eine kurze Fortsetzung am Cursor (Fill-in-the-Middle: Text vor UND nach
 dem Cursor gehen in den Prompt). Langsamer als Trie/N-Gramm, daher als
-Upgrade ueber den SSE-Pfad (Phase 3). Der optionale `kontext` (Umfeld-Retrieval,
+Upgrade über den SSE-Pfad (Phase 3). Der optionale `kontext` (Umfeld-Retrieval,
 Phase 4) wird als Stilhinweis mitgegeben.
 """
 
@@ -20,10 +20,10 @@ from app.services import llm_client
 
 _SYSTEM = (
     "Du bist eine deutsche Schreibhilfe. Der Nutzer schreibt einen Text; die Marke <CURSOR> "
-    "markiert die Schreibposition. Gib AUSSCHLIESSLICH den Text aus, der an <CURSOR> eingefuegt "
-    "werden soll - wenige Woerter bis hoechstens ein Satz, passend zu Stil, Grammatik und "
-    "Gross-/Kleinschreibung. Keine Wiederholung des vorhandenen Textes, keine Anfuehrungszeichen, "
-    "keine Erklaerung. Wurde ein Wort begonnen, vervollstaendige genau dieses Wort ohne fuehrendes "
+    "markiert die Schreibposition. Gib AUSSCHLIESSLICH den Text aus, der an <CURSOR> eingefügt "
+    "werden soll - wenige Wörter bis höchstens ein Satz, passend zu Stil, Grammatik und "
+    "Groß-/Kleinschreibung. Keine Wiederholung des vorhandenen Textes, keine Anführungszeichen, "
+    "keine Erklärung. Wurde ein Wort begonnen, vervollständige genau dieses Wort ohne führendes "
     "Leerzeichen."
 )
 
@@ -50,17 +50,17 @@ _THINK_RE = re.compile(r"<think>.*?</think>", re.DOTALL | re.IGNORECASE)
 
 
 def nachbereiten(anfrage: ErgaenzungsAnfrage, roh: str) -> Vorschlag | None:
-    """Normalisiert die Modellausgabe zu einem einfuegbaren Vorschlag (Abstaende, Anfuehrung).
+    """Normalisiert die Modellausgabe zu einem einfügbaren Vorschlag (Abstände, Anführung).
 
-    Entfernt Reasoning-Bloecke (<think>...</think>). Enthaelt die Ausgabe nur ein
+    Entfernt Reasoning-Blöcke (<think>...</think>). Enthält die Ausgabe nur ein
     offenes <think> ohne Abschluss (reines, abgeschnittenes Nachdenken), gibt es
-    keinen brauchbaren Vorschlag - dann ist ein Nicht-Reasoning-Modell noetig.
+    keinen brauchbaren Vorschlag - dann ist ein Nicht-Reasoning-Modell nötig.
     """
     ohne_think = _THINK_RE.sub("", roh)
     if "<think>" in ohne_think.lower():
         return None
     text = ohne_think.strip().strip('"').strip("'")
-    # Nur die erste Zeile, ausser im Satz-/Phrasenmodus mit bewusstem Umbruch.
+    # Nur die erste Zeile, außer im Satz-/Phrasenmodus mit bewusstem Umbruch.
     if anfrage.modus == ErgaenzungsModus.WORT:
         text = text.split("\n", 1)[0]
     text = text.rstrip()
@@ -68,8 +68,8 @@ def nachbereiten(anfrage: ErgaenzungsAnfrage, roh: str) -> Vorschlag | None:
         return None
 
     # Endet der Text auf Buchstaben, gilt das als offenes Wort -> direkt weiterschreiben.
-    # Endet er auf einem Trenner (Leerzeichen), ebenfalls kein zusaetzliches Leerzeichen.
-    # In beiden Faellen wird ein fuehrendes Leerzeichen der Modellausgabe entfernt.
+    # Endet er auf einem Trenner (Leerzeichen), ebenfalls kein zusätzliches Leerzeichen.
+    # In beiden Fällen wird ein führendes Leerzeichen der Modellausgabe entfernt.
     if anfrage.text_vor and (anfrage.text_vor[-1].isalnum() or anfrage.text_vor[-1].isspace()):
         text = text.lstrip()
 
@@ -96,7 +96,7 @@ class LlmEngine:
         return llm_client.zuletzt_erreichbar()
 
     async def ergaenze(self, anfrage: ErgaenzungsAnfrage, kontext: str | None) -> list[Vorschlag]:
-        """Einmalige (nicht streamende) Ergaenzung - fuer den Zwei-Ruf-Fallback."""
+        """Einmalige (nicht streamende) Ergänzung - für den Zwei-Ruf-Fallback."""
         try:
             roh = await llm_client.chat(
                 _nachrichten(anfrage, kontext),
@@ -110,7 +110,7 @@ class LlmEngine:
         return [vorschlag] if vorschlag else []
 
     async def stream(self, anfrage: ErgaenzungsAnfrage, kontext: str | None) -> AsyncIterator[str]:
-        """Liefert die Text-Deltas der Ergaenzung (fuer den SSE-Pfad)."""
+        """Liefert die Text-Deltas der Ergänzung (für den SSE-Pfad)."""
         async for delta in llm_client.chat_stream(
             _nachrichten(anfrage, kontext),
             temperature=0.2,

@@ -56,8 +56,8 @@
 
 <div class="karte">
   <div class="karte-kopf">
-    <i class="fa-solid fa-book"></i> Persoenliches Woerterbuch
-    <span class="abzeichen" style="margin-left:auto">{anzahl} Woerter gesamt</span>
+    <i class="fa-solid fa-book"></i> Persönliches Wörterbuch
+    <span class="abzeichen" style="margin-left:auto">{anzahl} Wörter gesamt</span>
   </div>
   <div class="karte-inhalt">
     <div class="werkzeugzeile">
@@ -73,12 +73,12 @@
       <input
         class="feld"
         style="max-width:220px"
-        placeholder="Wort hinzufuegen ..."
+        placeholder="Wort hinzufügen ..."
         bind:value={neuesWort}
         onkeydown={(e) => e.key === 'Enter' && hinzufuegen()}
       />
       <button class="knopf primaer" onclick={hinzufuegen} disabled={!neuesWort.trim()}>
-        <i class="fa-solid fa-plus"></i> Hinzufuegen
+        <i class="fa-solid fa-plus"></i> Hinzufügen
       </button>
     </div>
 
@@ -87,17 +87,17 @@
     {/if}
 
     {#if laedt}
-      <p class="hinweis-text"><i class="fa-solid fa-spinner spinner"></i> Laedt ...</p>
+      <p class="hinweis-text"><i class="fa-solid fa-spinner spinner"></i> Lädt ...</p>
     {:else if woerter.length === 0}
       <div class="leer-zustand" style="padding: var(--a4)">
         <i class="fa-solid fa-book-open"></i>
-        <strong>Noch keine Woerter</strong>
-        <span class="hinweis-text">Fuege eigene Woerter hinzu oder lerne sie in der Spielwiese.</span>
+        <strong>Noch keine Wörter</strong>
+        <span class="hinweis-text">Füge eigene Wörter hinzu oder lerne sie in der Spielwiese.</span>
       </div>
     {:else}
       <table class="tabelle">
         <thead>
-          <tr><th>Wort</th><th>Profil</th><th style="text-align:right">Haeufigkeit</th><th>Quelle</th><th></th></tr>
+          <tr><th>Wort</th><th>Profil</th><th style="text-align:right">Häufigkeit</th><th>Quelle</th><th></th></tr>
         </thead>
         <tbody>
           {#each woerter as w (w.wort + w.profil_id)}

@@ -1,4 +1,4 @@
-"""Grundtypen, die ueberall gebraucht werden: JSON-Wert und einheitliches Fehlermodell."""
+"""Grundtypen, die überall gebraucht werden: JSON-Wert und einheitliches Fehlermodell."""
 
 from __future__ import annotations
 

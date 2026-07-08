@@ -1,8 +1,8 @@
-"""Orchestriert die Rechtschreib-/Grammatikpruefung ueber mehrere Engines.
+"""Orchestriert die Rechtschreib-/Grammatikprüfung über mehrere Engines.
 
-Waehlt die Engines (angefragte oder die standardmaessig aktiven), fuehrt sie aus,
-filtert bekannte Woerter aus dem persoenlichen Woerterbuch heraus und liefert die
-zusammengefuehrten Befunde.
+Wählt die Engines (angefragte oder die standardmäßig aktiven), führt sie aus,
+filtert bekannte Wörter aus dem persönlichen Wörterbuch heraus und liefert die
+zusammengeführten Befunde.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ def _ausgewaehlte_engines(angefragt: list[str] | None) -> list[object]:
     if angefragt:
         gewuenscht = set(angefragt)
         return [e for e in alle if e.engine_id in gewuenscht and _verfuegbar(e)]
-    # Vorgabe: alle standardmaessig aktiven und verfuegbaren Engines.
+    # Vorgabe: alle standardmäßig aktiven und verfügbaren Engines.
     return [e for e in alle if e.standard_an and _verfuegbar(e)]
 
 
@@ -59,7 +59,7 @@ def fuehre_pruefung(anfrage: PruefAnfrage) -> PruefAntwort:
 
 
 def _im_woerterbuch(befund: Befund, text: str, bekannt: set[str]) -> bool:
-    """Rechtschreib-Befunde fuer im persoenlichen Woerterbuch bekannte Woerter verwerfen."""
+    """Rechtschreib-Befunde für im persönlichen Wörterbuch bekannte Wörter verwerfen."""
     if befund.art != BefundArt.RECHTSCHREIBUNG:
         return False
     wort = text[befund.offset : befund.offset + befund.laenge].lower()

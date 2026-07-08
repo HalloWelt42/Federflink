@@ -1,4 +1,4 @@
-"""Tests fuer Rechtschreibpruefung, persoenliches Woerterbuch und Korrektur-Schutznetze."""
+"""Tests für Rechtschreibprüfung, persönliches Wörterbuch und Korrektur-Schutznetze."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ def _hunspell_da() -> bool:
 
 def test_hunspell_findet_fehler_und_schlaegt_vor():
     if not _hunspell_da():
-        pytest.skip("Deutsches Woerterbuch nicht vorhanden (tools/hole_woerterbuch.py)")
+        pytest.skip("Deutsches Wörterbuch nicht vorhanden (tools/hole_woerterbuch.py)")
     text = "Das ist ein Fehlar."
     befunde = HunspellEngine().pruefe(text, "de-DE")
     treffer = [b for b in befunde if text[b.offset : b.offset + b.laenge] == "Fehlar"]
@@ -26,7 +26,7 @@ def test_hunspell_findet_fehler_und_schlaegt_vor():
 
 def test_woerterbuch_filtert_bekanntes_wort():
     if not _hunspell_da():
-        pytest.skip("Deutsches Woerterbuch nicht vorhanden")
+        pytest.skip("Deutsches Wörterbuch nicht vorhanden")
     text = "Das Wort Xyzzyx kennt niemand."
     vorher = pruefung.fuehre_pruefung(PruefAnfrage(text=text))
     assert any(text[b.offset : b.offset + b.laenge] == "Xyzzyx" for b in vorher.befunde)
@@ -46,8 +46,8 @@ def test_woerterbuch_hinzufuegen_und_entfernen():
 async def test_korrektur_verwirft_halluzination(monkeypatch):
     async def fake_chat(*args, **kwargs):
         return (
-            "Hier ist eine voellig andere, sehr lange Antwort, die nichts mit dem "
-            "Eingabetext zu tun hat und deutlich mehr Woerter enthaelt als das Original."
+            "Hier ist eine völlig andere, sehr lange Antwort, die nichts mit dem "
+            "Eingabetext zu tun hat und deutlich mehr Wörter enthält als das Original."
         )
 
     monkeypatch.setattr(llm_client, "chat", fake_chat)
@@ -59,7 +59,7 @@ async def test_korrektur_verwirft_halluzination(monkeypatch):
 
 async def test_korrektur_uebernimmt_gute_korrektur(monkeypatch):
     async def fake_chat(*args, **kwargs):
-        return "Ich glaube, das Ergebnis stimmt nicht ganz, bitte pruefen."
+        return "Ich glaube, das Ergebnis stimmt nicht ganz, bitte prüfen."
 
     monkeypatch.setattr(llm_client, "chat", fake_chat)
     ergebnis = await korrektur.korrigiere("ich glaube das ergebnis stimt nich ganz bitte pruefen")

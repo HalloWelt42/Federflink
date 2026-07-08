@@ -1,18 +1,18 @@
 # Federflink - Betrieb auf dem Pi5
 
-Federflink laeuft auf einem Raspberry Pi 5 (8-16 GB RAM) als zentraler Dienst im
-Heimnetz. Backend und Frontend laufen bare, das Sprachmodell ueber Ollama.
+Federflink läuft auf einem Raspberry Pi 5 (8-16 GB RAM) als zentraler Dienst im
+Heimnetz. Backend und Frontend laufen bare, das Sprachmodell über Ollama.
 
 ## 1. Voraussetzungen
 
 - Raspberry Pi OS (64-bit), Python >= 3.12, Node.js/npm, `git`.
-- Genug RAM fuer ein kleines Modell (siehe [09_MODELLE.md](09_MODELLE.md)).
+- Genug RAM für ein kleines Modell (siehe [09_MODELLE.md](09_MODELLE.md)).
 
 ## 2. Sprachmodell (Ollama)
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
-ollama pull qwen2.5:1.5b-instruct        # Ergaenzung/Korrektur
+ollama pull qwen2.5:1.5b-instruct        # Ergänzung/Korrektur
 ollama pull bge-m3                        # Embeddings (Umfeld-Kontext)
 ```
 
@@ -32,12 +32,12 @@ kann auf dem Pi abgeschaltet bleiben.
 
 ```bash
 git clone <repo> federflink && cd federflink
-./backend/tools/hole_woerterbuch.py     # deutsches Woerterbuch + Frequenzliste laden
+./backend/tools/hole_woerterbuch.py     # deutsches Wörterbuch + Frequenzliste laden
 ./start.sh start                        # Backend :8500, Frontend :5195
 ```
 
-Datenbank und Woerterbuecher liegen unter `data/` auf dem lokalen Dateisystem
-(ext4). Keine SQLite-Datei auf ein Netzlaufwerk oder einen exFAT-Datentraeger
+Datenbank und Wörterbücher liegen unter `data/` auf dem lokalen Dateisystem
+(ext4). Keine SQLite-Datei auf ein Netzlaufwerk oder einen exFAT-Datenträger
 legen (WAL-Journal kann dort korrumpieren).
 
 ## 4. Autostart (systemd)
@@ -70,15 +70,15 @@ sudo systemctl enable --now federflink
 
 ## 5. Zugriff aus dem Netz
 
-- Andere Geraete erreichen die Oberflaeche unter `http://<pi-ip>:5195`.
+- Andere Geräte erreichen die Oberfläche unter `http://<pi-ip>:5195`.
 - Die Browser-Erweiterung: Server-URL auf `http://<pi-ip>:8500` setzen und in
   `extension/manifest.json` unter `host_permissions` `http://<pi-ip>:8500/*`
-  ergaenzen, dann neu laden.
-- Optional HTTPS ueber einen lokalen Reverse-Proxy (z. B. Caddy) fuer PWA-/
+  ergänzen, dann neu laden.
+- Optional HTTPS über einen lokalen Reverse-Proxy (z. B. Caddy) für PWA-/
   Sicherheitskomfort.
 
 ## 6. Ressourcen
 
 Ein 1.5B-Instruct-Modell (Q4) belegt ~1-1.5 GB RAM und liefert auf dem Pi5 kurze
-Ergaenzungen in wenigen hundert Millisekunden. Rechtschreibung (Hunspell) und
+Ergänzungen in wenigen hundert Millisekunden. Rechtschreibung (Hunspell) und
 Trie/N-Gramm laufen praktisch sofort und ohne Modell.

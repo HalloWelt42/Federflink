@@ -1,4 +1,4 @@
-"""Tests fuer die LLM-Ergaenzung: SSE-Fluss, Nachbereitung, Zwei-Ruf-Fallback (gemockt)."""
+"""Tests für die LLM-Ergänzung: SSE-Fluss, Nachbereitung, Zwei-Ruf-Fallback (gemockt)."""
 
 from __future__ import annotations
 
@@ -21,10 +21,10 @@ def test_nachbereiten_entfernt_reasoning():
 
 
 def test_nachbereiten_normalisiert_abstaende():
-    # Offenes Wort am Ende -> Modellausgabe wird direkt angehaengt (kein Leerzeichen).
+    # Offenes Wort am Ende -> Modellausgabe wird direkt angehängt (kein Leerzeichen).
     mitten = ErgaenzungsAnfrage(text_vor="Gut", modus=ErgaenzungsModus.WORT)
     assert nachbereiten(mitten, " en").text == "en"  # Gut + en = Guten
-    # Trenner steht schon -> fuehrendes Leerzeichen der Ausgabe entfaellt.
+    # Trenner steht schon -> führendes Leerzeichen der Ausgabe entfällt.
     nach_leer = ErgaenzungsAnfrage(text_vor="Guten ", modus=ErgaenzungsModus.WORT)
     assert nachbereiten(nach_leer, " Morgen").text == "Morgen"
 

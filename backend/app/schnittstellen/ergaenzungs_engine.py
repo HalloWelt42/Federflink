@@ -1,7 +1,7 @@
-"""Vertrag fuer Ergaenzungs-Engines: schlaegt eine Fortsetzung am Cursor vor.
+"""Vertrag für Ergänzungs-Engines: schlägt eine Fortsetzung am Cursor vor.
 
 Schnelle Engines (Trie, N-Gramm) antworten praktisch sofort; die LLM-Engine ist
-langsamer, aber kontextsensitiv. Der Dispatcher (app.dispatcher) fuehrt sie
+langsamer, aber kontextsensitiv. Der Dispatcher (app.dispatcher) führt sie
 gemeinsam aus und mischt die Ergebnisse (Instant-Vorschlag zuerst, LLM-Upgrade
 danach). Alle Methoden sind async, damit der Dispatcher einheitlich bleibt.
 """
@@ -25,6 +25,6 @@ class ErgaenzungsEngine(Protocol):
         ...
 
     async def ergaenze(self, anfrage: ErgaenzungsAnfrage, kontext: str | None) -> list[Vorschlag]:
-        """Liefert bewertete Vorschlaege. `kontext` ist optionaler Umfeld-Kontext
-        (aus dem Retrieval), den kontextsensitive Engines nutzen koennen."""
+        """Liefert bewertete Vorschläge. `kontext` ist optionaler Umfeld-Kontext
+        (aus dem Retrieval), den kontextsensitive Engines nutzen können."""
         ...

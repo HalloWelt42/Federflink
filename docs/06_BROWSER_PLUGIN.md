@@ -5,8 +5,8 @@ und Bedienung: siehe `extension/README.md`.
 
 ## Aufbau (drei Schichten)
 
-- **MAIN-World-Skript** (`ghost-inject.js`): nur beim Uebernehmen - robustes
-  Einfuegen in Framework-Felder (React/Vue) ueber den nativen value-Setter.
+- **MAIN-World-Skript** (`ghost-inject.js`): nur beim Übernehmen - robustes
+  Einfügen in Framework-Felder (React/Vue) über den nativen value-Setter.
 - **ISOLATED Content-Skript** (`assistant.js`): Fokus/Eignung, Kontext-Extraktion,
   Entprellung, Rendering, Tastensteuerung, Reconcile.
 - **Service-Worker**: besitzt das Netzwerk (fetch + SSE), leitet Frames an das
@@ -14,13 +14,13 @@ und Bedienung: siehe `extension/README.md`.
 
 ## Anzeige (hybrid)
 
-- `input`/`textarea`: Inline-Geistertext ueber einen Overlay-Mirror (Shadow-DOM),
+- `input`/`textarea`: Inline-Geistertext über einen Overlay-Mirror (Shadow-DOM),
   nur am Zeilenende; sonst Pille.
 - `contenteditable`/komplexe Editoren: schwebende Pille am Cursor.
 
 ## Bedienung
 
-- Tab = uebernehmen, Ctrl/Alt+Pfeil rechts = ein Wort uebernehmen, Esc = verwerfen.
+- Tab = übernehmen, Ctrl/Alt+Pfeil rechts = ein Wort übernehmen, Esc = verwerfen.
 - Globaler Schalter und pro-Seite an/aus, damit nichts zugespammt wird.
 
 ## Datenschutz

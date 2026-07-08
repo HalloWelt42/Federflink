@@ -1,7 +1,7 @@
-"""Naechstes-Wort-/Phrasen-Vorhersage aus gelernten N-Grammen.
+"""Nächstes-Wort-/Phrasen-Vorhersage aus gelernten N-Grammen.
 
 Greift, wenn der Cursor hinter einem Worttrenner steht (kein offenes Wort). Lernt
-online: anfangs leer, wird mit jeder Uebernahme besser. Kann mehrere Woerter als
+online: anfangs leer, wird mit jeder Übernahme besser. Kann mehrere Wörter als
 Phrase vorschlagen, solange die Fortsetzung hinreichend belegt ist.
 """
 
@@ -18,7 +18,7 @@ from app.registry import ergaenzungs_engine
 @ergaenzungs_engine
 class NgramEngine:
     engine_id: ClassVar[str] = "ngram"
-    name: ClassVar[str] = "Naechstes Wort (N-Gramm)"
+    name: ClassVar[str] = "Nächstes Wort (N-Gramm)"
     standard_an: ClassVar[bool] = True
     streaming: ClassVar[bool] = False
 
@@ -26,7 +26,7 @@ class NgramEngine:
         return True
 
     async def ergaenze(self, anfrage: ErgaenzungsAnfrage, kontext: str | None) -> list[Vorschlag]:
-        # Nur wenn kein offenes Wort am Cursor steht (sonst ist die Trie-Engine zustaendig).
+        # Nur wenn kein offenes Wort am Cursor steht (sonst ist die Trie-Engine zuständig).
         if tokens.letztes_teilwort(anfrage.text_vor):
             return []
         vorher = tokens.woerter(anfrage.text_vor)
@@ -36,7 +36,7 @@ class NgramEngine:
         profil = anfrage.profil_id or "standard"
         vorschlaege: list[Vorschlag] = []
 
-        # Fuehrendes Leerzeichen ergaenzen, falls der bisherige Text nicht schon mit
+        # Führendes Leerzeichen ergänzen, falls der bisherige Text nicht schon mit
         # einem Trenner endet (z. B. nach Satzzeichen ohne Leerzeichen).
         trenner = "" if anfrage.text_vor.endswith((" ", "\n", "\t")) else " "
 

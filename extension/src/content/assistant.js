@@ -1,10 +1,10 @@
 /**
  * Federflink Content-Skript (ISOLATED world).
  *
- * Beobachtet Eingabefelder, holt beim Tippen (entprellt) eine Ergaenzung ueber
+ * Beobachtet Eingabefelder, holt beim Tippen (entprellt) eine Ergänzung über
  * den Service-Worker (SSE) und zeigt sie als Vorschau: Inline-Geistertext in
- * input/textarea (nur am Textende), sonst eine schwebende Pille. Tab uebernimmt,
- * Esc verwirft. Nichts wird automatisch eingefuegt. Passwort-/Sensibelfelder
+ * input/textarea (nur am Textende), sonst eine schwebende Pille. Tab übernimmt,
+ * Esc verwirft. Nichts wird automatisch eingefügt. Passwort-/Sensibelfelder
  * werden nie ausgelesen.
  */
 ;(() => {
@@ -282,7 +282,7 @@
     schatten.appendChild(pille)
   }
 
-  // Cursorkoordinaten (Viewport) fuer die Pille.
+  // Cursorkoordinaten (Viewport) für die Pille.
   function caretKoordinaten(k) {
     if (feld.tagName === 'INPUT' || feld.tagName === 'TEXTAREA') {
       const rect = feld.getBoundingClientRect()
@@ -321,7 +321,7 @@
     return { x: b.left, y: b.top }
   }
 
-  // ----- Uebernehmen / Verwerfen -----------------------------------------
+  // ----- Übernehmen / Verwerfen -----------------------------------------
   function injiziereMain() {
     if (mainInjiziert) return
     mainInjiziert = true
@@ -344,7 +344,7 @@
     if (feld.tagName === 'INPUT' || feld.tagName === 'TEXTAREA') {
       const neu = k.vor + ghost + k.nach
       const cursor = (k.vor + ghost).length
-      // Bevorzugt ueber die Seitenwelt (Framework-sicher); Fallback im Content.
+      // Bevorzugt über die Seitenwelt (Framework-sicher); Fallback im Content.
       window.postMessage({ ns: NS, typ: 'einfuegen', wert: neu, cursor }, '*')
       setTimeout(() => {
         if (feld && feld.value !== neu) {
@@ -374,7 +374,7 @@
       signal: {
         uebernommen_text: vorschlag.text,
         uebernommen_engine: vorschlag.engine,
-        // Kontext nur senden, wenn pro Seite ausdruecklich erlaubt (Datenschutz).
+        // Kontext nur senden, wenn pro Seite ausdrücklich erlaubt (Datenschutz).
         text_vor: seite.lernen ? k.vor : null,
         profil_id: seite.profil,
         seite: { host: HOST, feld_art: k.feldArt, sprach_hinweis: 'de' },

@@ -1,9 +1,9 @@
-"""Wortvervollstaendigung: vollendet das gerade getippte Wort am Cursor.
+"""Wortvervollständigung: vollendet das gerade getippte Wort am Cursor.
 
-Quelle sind die deutsche Haeufigkeitsliste und das persoenliche Woerterbuch
-(gelernte Woerter zuerst). Der Vorschlag ist nur das fehlende Wortende (Suffix),
-das an das bereits Getippte angehaengt wird - so bleibt die Gross-/Kleinschreibung
-des Praefix erhalten. Sofort, kein Sprachmodell noetig.
+Quelle sind die deutsche Häufigkeitsliste und das persönliche Wörterbuch
+(gelernte Wörter zuerst). Der Vorschlag ist nur das fehlende Wortende (Suffix),
+das an das bereits Getippte angehängt wird - so bleibt die Groß-/Kleinschreibung
+des Präfix erhalten. Sofort, kein Sprachmodell nötig.
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ _MIN_PRAEFIX = 2
 @ergaenzungs_engine
 class TrieEngine:
     engine_id: ClassVar[str] = "trie"
-    name: ClassVar[str] = "Wortvervollstaendigung"
+    name: ClassVar[str] = "Wortvervollständigung"
     standard_an: ClassVar[bool] = True
     streaming: ClassVar[bool] = False
 
@@ -55,12 +55,12 @@ class TrieEngine:
                 )
             )
 
-        # 1) Gelernte Woerter zuerst (hoher Score).
+        # 1) Gelernte Wörter zuerst (hoher Score).
         profil = anfrage.profil_id or "standard"
         for wort, _h in woerterbuch.woerter_mit_praefix(teil_klein, profil_id=profil, limit=top):
             aufnehmen(wort.lower(), 0.95)
 
-        # 2) Haeufigkeitsliste, nach Rang absteigend gewichtet.
+        # 2) Häufigkeitsliste, nach Rang absteigend gewichtet.
         treffer = frequenz.vervollstaendige(teil_klein, top=top + 3)
         for rang, (wort, _h) in enumerate(treffer):
             aufnehmen(wort, max(0.5, 0.85 - rang * 0.05))

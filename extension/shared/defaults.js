@@ -1,7 +1,7 @@
 /**
- * Gemeinsame Standardwerte und Helfer fuer Service-Worker, Content-Skript und
+ * Gemeinsame Standardwerte und Helfer für Service-Worker, Content-Skript und
  * die Einstellungsseiten. Wird in allen drei Kontexten geladen und legt seine
- * Helfer auf `self` ab (kein Modul-Import, damit es ueberall gleich funktioniert).
+ * Helfer auf `self` ab (kein Modul-Import, damit es überall gleich funktioniert).
  */
 
 self.FEDERFLINK_DEFAULTS = {
@@ -15,18 +15,18 @@ self.FEDERFLINK_DEFAULTS = {
   proSeite: {}, // host -> { aktiv: bool, profil: string, lernen: bool }
 }
 
-/** Fuehrt gespeicherte Optionen mit den Standardwerten zusammen. */
+/** Führt gespeicherte Optionen mit den Standardwerten zusammen. */
 self.ffMerge = function ffMerge(gespeichert) {
   const opt = Object.assign({}, self.FEDERFLINK_DEFAULTS, gespeichert || {})
   opt.proSeite = Object.assign({}, gespeichert && gespeichert.proSeite)
   return opt
 }
 
-/** Effektive Einstellung fuer einen Host (mit Rueckfall auf die Vorgaben). */
+/** Effektive Einstellung für einen Host (mit Rückfall auf die Vorgaben). */
 self.ffSeite = function ffSeite(opt, host) {
   const eintrag = (opt.proSeite && opt.proSeite[host]) || {}
   return {
-    aktiv: eintrag.aktiv !== false, // Standard: an, ausser ausdruecklich aus
+    aktiv: eintrag.aktiv !== false, // Standard: an, außer ausdrücklich aus
     profil: eintrag.profil || opt.profilStandard,
     lernen: eintrag.lernen === true, // Standard: kein Kontext senden (Datenschutz)
   }

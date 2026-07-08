@@ -72,7 +72,7 @@
   }
 
   async function vorschlagAnwenden(b: Befund, vorschlag: string) {
-    // Gegen den geprueften Stand anwenden, dann neu pruefen (Offsets bleiben gueltig).
+    // Gegen den geprüften Stand anwenden, dann neu prüfen (Offsets bleiben gültig).
     text = basisText.slice(0, b.offset) + vorschlag + basisText.slice(b.offset + b.laenge)
     await pruefen()
   }
@@ -109,7 +109,7 @@
   }
 
   function beiEingabe() {
-    // Ergebnisse verwerfen, sobald der Nutzer selbst tippt (nicht bei Programmaenderung).
+    // Ergebnisse verwerfen, sobald der Nutzer selbst tippt (nicht bei Programmänderung).
     befunde = []
     geprueft = false
     korrektur = null
@@ -140,7 +140,7 @@
           class:an={aktiveEngines.includes(e.id)}
           class:deaktiviert={!e.aktiv}
           disabled={!e.aktiv}
-          title={e.aktiv ? e.name : `${e.name} nicht verfuegbar`}
+          title={e.aktiv ? e.name : `${e.name} nicht verfügbar`}
           onclick={() => engineUmschalten(e.id)}
         >
           <i class="fa-solid {aktiveEngines.includes(e.id) ? 'fa-check' : 'fa-xmark'}"></i>
@@ -152,7 +152,7 @@
     <textarea
       class="feld"
       rows="5"
-      placeholder="Text zum Pruefen oder Verbessern ..."
+      placeholder="Text zum Prüfen oder Verbessern ..."
       bind:value={text}
       oninput={beiEingabe}
     ></textarea>
@@ -160,7 +160,7 @@
     <div class="werkzeugzeile">
       <button class="knopf primaer" onclick={pruefen} disabled={pruefLaeuft || !text.trim()}>
         {#if pruefLaeuft}<i class="fa-solid fa-spinner spinner"></i>{:else}<i class="fa-solid fa-spell-check"></i>{/if}
-        Rechtschreibung pruefen
+        Rechtschreibung prüfen
       </button>
       <button
         class="knopf"
@@ -186,18 +186,18 @@
 
 {#if korrektur}
   <div class="karte">
-    <div class="karte-kopf"><i class="fa-solid fa-wand-magic-sparkles"></i> Korrektur-Vorschau (nichts wird automatisch uebernommen)</div>
+    <div class="karte-kopf"><i class="fa-solid fa-wand-magic-sparkles"></i> Korrektur-Vorschau (nichts wird automatisch übernommen)</div>
     <div class="karte-inhalt">
       {#if korrektur.veraendert}
         <div class="diff-anzeige">
           {#each diffTeile as t}<span class="d-{t.typ}">{t.text}</span>{/each}
         </div>
         <div class="werkzeugzeile">
-          <button class="knopf primaer" onclick={korrekturUebernehmen}><i class="fa-solid fa-check"></i> Korrigierten Text uebernehmen</button>
+          <button class="knopf primaer" onclick={korrekturUebernehmen}><i class="fa-solid fa-check"></i> Korrigierten Text übernehmen</button>
           <button class="knopf" onclick={() => (korrektur = null)}><i class="fa-solid fa-xmark"></i> Verwerfen</button>
         </div>
       {:else}
-        <p class="hinweis-text"><i class="fa-solid fa-circle-check"></i> Das Sprachmodell hat nichts zu korrigieren gefunden (oder es war nicht erreichbar - dann bleibt der Text unveraendert).</p>
+        <p class="hinweis-text"><i class="fa-solid fa-circle-check"></i> Das Sprachmodell hat nichts zu korrigieren gefunden (oder es war nicht erreichbar - dann bleibt der Text unverändert).</p>
       {/if}
     </div>
   </div>
@@ -220,14 +220,14 @@
             <span class="befund-wort mono">{wortVon(b)}</span>
             <span class="vorschlag-liste">
               {#each b.vorschlaege as v}
-                <button class="chip anwendbar" onclick={() => vorschlagAnwenden(b, v)} title="Uebernehmen">{v}</button>
+                <button class="chip anwendbar" onclick={() => vorschlagAnwenden(b, v)} title="Übernehmen">{v}</button>
               {/each}
               {#if b.vorschlaege.length === 0}
-                <span class="hinweis-text">keine Vorschlaege</span>
+                <span class="hinweis-text">keine Vorschläge</span>
               {/if}
             </span>
             {#if b.art === 'rechtschreibung'}
-              <button class="icon-knopf" title="Ins persoenliche Woerterbuch" aria-label="Ins Woerterbuch" onclick={() => insWoerterbuch(b)}>
+              <button class="icon-knopf" title="Ins persönliche Wörterbuch" aria-label="Ins Wörterbuch" onclick={() => insWoerterbuch(b)}>
                 <i class="fa-solid fa-book-medical"></i>
               </button>
             {/if}

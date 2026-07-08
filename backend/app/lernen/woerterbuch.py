@@ -1,8 +1,8 @@
-"""Persoenliches Woerterbuch (Lernen Stufe 1).
+"""Persönliches Wörterbuch (Lernen Stufe 1).
 
-Woerter, die der Nutzer schreibt, uebernimmt oder manuell hinzufuegt, werden hier
-gezaehlt. Sie heben Rechtschreib-Warnungen fuer Eigennamen/Fachbegriffe auf und
-fliessen spaeter in die Wortergaenzung (Trie) ein.
+Wörter, die der Nutzer schreibt, übernimmt oder manuell hinzufügt, werden hier
+gezählt. Sie heben Rechtschreib-Warnungen für Eigennamen/Fachbegriffe auf und
+fließen später in die Wortergänzung (Trie) ein.
 """
 
 from __future__ import annotations
@@ -17,9 +17,9 @@ def _jetzt() -> str:
 
 
 def bekannte_woerter(profil_id: str = "standard") -> set[str]:
-    """Liefert die klein geschriebenen bekannten Woerter eines Profils.
+    """Liefert die klein geschriebenen bekannten Wörter eines Profils.
 
-    Das Standard-Profil gilt zusaetzlich als Grundwortschatz fuer alle Profile.
+    Das Standard-Profil gilt zusätzlich als Grundwortschatz für alle Profile.
     """
     with get_db().connect() as conn:
         zeilen = conn.execute(
@@ -30,7 +30,7 @@ def bekannte_woerter(profil_id: str = "standard") -> set[str]:
 
 
 def hinzufuegen(wort: str, *, profil_id: str = "standard", quelle: str = "manuell") -> None:
-    """Fuegt ein Wort hinzu oder erhoeht seine Haeufigkeit (idempotent)."""
+    """Fügt ein Wort hinzu oder erhöht seine Häufigkeit (idempotent)."""
     wort = wort.strip()
     if not wort:
         return
@@ -48,7 +48,7 @@ def hinzufuegen(wort: str, *, profil_id: str = "standard", quelle: str = "manuel
 
 
 def liste(profil_id: str | None = None, *, limit: int = 500) -> list[dict[str, object]]:
-    """Woerter fuer die Verwaltung im UI (haeufigste zuerst)."""
+    """Wörter für die Verwaltung im UI (häufigste zuerst)."""
     with get_db().connect() as conn:
         if profil_id:
             zeilen = conn.execute(
@@ -68,7 +68,7 @@ def liste(profil_id: str | None = None, *, limit: int = 500) -> list[dict[str, o
 def woerter_mit_praefix(
     praefix_klein: str, *, profil_id: str = "standard", limit: int = 5
 ) -> list[tuple[str, int]]:
-    """Gelernte Woerter, die mit dem Praefix beginnen (fuer die Vervollstaendigung)."""
+    """Gelernte Wörter, die mit dem Präfix beginnen (für die Vervollständigung)."""
     if not praefix_klein:
         return []
     muster = praefix_klein.replace("%", "").replace("_", "") + "%"

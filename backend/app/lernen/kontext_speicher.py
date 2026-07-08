@@ -1,9 +1,9 @@
-"""Umfeld-Kontext (Lernen Stufe 2), eigenstaendig - ohne Fremd-App.
+"""Umfeld-Kontext (Lernen Stufe 2), eigenständig - ohne Fremd-App.
 
-Akzeptierte Passagen werden ueber den lokalen Embedding-Endpunkt eingebettet und
-als Vektor (float32-BLOB) in SQLite abgelegt. Bei einer Ergaenzung werden die
-aehnlichsten Passagen des Profils gesucht und dem Sprachmodell als Stilhinweis
-mitgegeben. Aehnlichkeit per Kosinus in reinem Python (kein numpy noetig).
+Akzeptierte Passagen werden über den lokalen Embedding-Endpunkt eingebettet und
+als Vektor (float32-BLOB) in SQLite abgelegt. Bei einer Ergänzung werden die
+ähnlichsten Passagen des Profils gesucht und dem Sprachmodell als Stilhinweis
+mitgegeben. Ähnlichkeit per Kosinus in reinem Python (kein numpy nötig).
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from datetime import UTC, datetime
 from app.persistence.db import get_db
 from app.services import llm_client
 
-# Obergrenze gespeicherter Passagen (aelteste werden verworfen).
+# Obergrenze gespeicherter Passagen (älteste werden verworfen).
 _MAX_PASSAGEN = 5000
 _MIN_ZEICHEN = 12
 
@@ -46,7 +46,7 @@ def _kosinus(a: list[float], b: list[float]) -> float:
 
 
 async def merke_passage(text: str, *, profil_id: str = "standard", host: str = "") -> bool:
-    """Bettet eine Passage ein und speichert sie. False, wenn kein Embedding moeglich."""
+    """Bettet eine Passage ein und speichert sie. False, wenn kein Embedding möglich."""
     text = text.strip()
     if len(text) < _MIN_ZEICHEN:
         return False
@@ -65,7 +65,7 @@ async def merke_passage(text: str, *, profil_id: str = "standard", host: str = "
             """,
             (profil_id, text, _pack(vektoren[0]), dim, modell, host, jetzt),
         )
-        # Aelteste ueber der Obergrenze entfernen.
+        # Älteste über der Obergrenze entfernen.
         conn.execute(
             """
             DELETE FROM kontext_passagen WHERE id IN (
@@ -80,7 +80,7 @@ async def merke_passage(text: str, *, profil_id: str = "standard", host: str = "
 async def aehnliche(
     text: str, *, profil_id: str = "standard", top: int = 3, min_score: float = 0.55
 ) -> list[str]:
-    """Aehnlichste gespeicherte Passagen (Text) zum Anfragetext."""
+    """Ähnlichste gespeicherte Passagen (Text) zum Anfragetext."""
     text = text.strip()
     if len(text) < _MIN_ZEICHEN:
         return []

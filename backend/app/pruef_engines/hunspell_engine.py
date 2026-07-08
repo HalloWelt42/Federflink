@@ -1,9 +1,9 @@
-"""Rechtschreibpruefung auf Wortebene mit Hunspell (reines Python via spylls).
+"""Rechtschreibprüfung auf Wortebene mit Hunspell (reines Python via spylls).
 
-Nutzt das deutsche Woerterbuch unter data/woerterbuecher/de_DE.{aff,dic}
+Nutzt das deutsche Wörterbuch unter data/woerterbuecher/de_DE.{aff,dic}
 (einmalig via tools/hole_woerterbuch.py laden). Erkennt deutsche Komposita und
-liefert Korrekturvorschlaege. Sehr schnell und ressourcenschonend - laeuft auf
-Mac und Pi identisch, kein Java noetig.
+liefert Korrekturvorschläge. Sehr schnell und ressourcenschonend - läuft auf
+Mac und Pi identisch, kein Java nötig.
 """
 
 from __future__ import annotations
@@ -21,7 +21,7 @@ _WORT_RE = re.compile(r"[A-Za-zÄÖÜäöüß]+(?:['-][A-Za-zÄÖÜäöüß]+)*"
 _MAX_VORSCHLAEGE = 5
 _MAX_BEFUNDE = 300
 
-# Modul-weite, faul geladene Woerterbuch-Instanz (Laden dauert einmalig ~1-2 s).
+# Modul-weite, faul geladene Wörterbuch-Instanz (Laden dauert einmalig ~1-2 s).
 _dict = None
 _geladen = False
 
@@ -39,16 +39,16 @@ def _lade_dict() -> object | None:
         from spylls.hunspell import Dictionary
 
         _dict = Dictionary.from_files(str(basis))
-    except Exception:  # noqa: BLE001 - fehlendes/kaputtes Woerterbuch darf nicht crashen
+    except Exception:  # noqa: BLE001 - fehlendes/kaputtes Wörterbuch darf nicht crashen
         _dict = None
     return _dict
 
 
 def kennt_wort(wort: str) -> bool | None:
-    """True/False, ob das Woerterbuch das Wort kennt; None, wenn kein Woerterbuch da ist.
+    """True/False, ob das Wörterbuch das Wort kennt; None, wenn kein Wörterbuch da ist.
 
-    Wird beim Lernen genutzt, um nur wirklich unbekannte Woerter ins persoenliche
-    Woerterbuch aufzunehmen (statt es mit Allerweltswoertern zu fluten).
+    Wird beim Lernen genutzt, um nur wirklich unbekannte Wörter ins persönliche
+    Wörterbuch aufzunehmen (statt es mit Allerweltswörtern zu fluten).
     """
     woerterbuch = _lade_dict()
     if woerterbuch is None:
@@ -87,14 +87,14 @@ class HunspellEngine:
                 if woerterbuch.lookup(wort):
                     continue
                 vorschlaege = _hole_vorschlaege(woerterbuch, wort)
-            except Exception:  # noqa: BLE001 - einzelnes Wort darf die Pruefung nicht stoppen
+            except Exception:  # noqa: BLE001 - einzelnes Wort darf die Prüfung nicht stoppen
                 continue
             befunde.append(
                 Befund(
                     offset=treffer.start(),
                     laenge=len(wort),
                     art=BefundArt.RECHTSCHREIBUNG,
-                    meldung=f"Moegliche falsche Schreibweise: {wort}",
+                    meldung=f"Mögliche falsche Schreibweise: {wort}",
                     vorschlaege=vorschlaege,
                     engine=self.engine_id,
                 )

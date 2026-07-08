@@ -1,4 +1,4 @@
-"""Tests fuer Wortvervollstaendigung (Trie), N-Gramm-Lernen und Dispatcher."""
+"""Tests für Wortvervollständigung (Trie), N-Gramm-Lernen und Dispatcher."""
 
 from __future__ import annotations
 
@@ -32,7 +32,7 @@ async def test_ngram_lernt_und_sagt_vorher():
 
 
 async def test_learn_fuegt_unbekanntes_wort_hinzu_und_lernt_ngramme():
-    # Einzelwort-Uebernahme (kein Leerzeichen) -> kein Embedding-Aufruf, kein Netz.
+    # Einzelwort-Übernahme (kein Leerzeichen) -> kein Embedding-Aufruf, kein Netz.
     antwort = await learn(
         LernAnfrage(
             uebernommen_text="Blupfwort",
@@ -41,7 +41,7 @@ async def test_learn_fuegt_unbekanntes_wort_hinzu_und_lernt_ngramme():
         )
     )
     assert antwort.gelernt is True
-    # 'Blupfwort' ist kein echtes Wort -> wandert ins persoenliche Woerterbuch.
+    # 'Blupfwort' ist kein echtes Wort -> wandert ins persönliche Wörterbuch.
     assert "blupfwort" in woerterbuch.bekannte_woerter()
     # N-Gramme wurden gelernt.
     assert ngramm_speicher.anzahl() > 0

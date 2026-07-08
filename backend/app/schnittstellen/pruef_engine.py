@@ -1,9 +1,9 @@
-"""Vertrag fuer Pruef-Engines: findet Fehler in einem Text.
+"""Vertrag für Prüf-Engines: findet Fehler in einem Text.
 
 Eine Engine je Verfahren (Hunspell, LanguageTool ...), registriert per Dekorator
-(siehe app.registry). Pruef-Engines sind synchron und schnell (regelbasiert);
+(siehe app.registry). Prüf-Engines sind synchron und schnell (regelbasiert);
 die neuronale Ganzsatz-Korrektur ist ein eigener Dienst (app.services.korrektur),
-kein Pruef-Engine, weil sie umschreibt statt zu markieren.
+kein Prüf-Engine, weil sie umschreibt statt zu markieren.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ class PruefEngine(Protocol):
     standard_an: ClassVar[bool]
 
     def ist_verfuegbar(self) -> bool:
-        """False, wenn Abhaengigkeiten fehlen (z. B. Woerterbuch, Java)."""
+        """False, wenn Abhängigkeiten fehlen (z. B. Wörterbuch, Java)."""
         ...
 
     def pruefe(self, text: str, sprache: str) -> list[Befund]:

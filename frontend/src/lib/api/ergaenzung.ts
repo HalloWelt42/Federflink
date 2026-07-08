@@ -1,4 +1,4 @@
-/** API: Textergaenzung und Lernsignal. */
+/** API: Textergänzung und Lernsignal. */
 
 import { requestJson } from './http'
 import type { ErgaenzungsAntwort, ErgaenzungsModus } from './typen'
@@ -32,8 +32,8 @@ export interface StreamRueckrufe {
 }
 
 /**
- * Textergaenzung per Server-Sent-Events (Progressive Enhancement): erst der
- * Instant-Vorschlag, dann - falls ein Sprachmodell laeuft - Token und das finale
+ * Textergänzung per Server-Sent-Events (Progressive Enhancement): erst der
+ * Instant-Vorschlag, dann - falls ein Sprachmodell läuft - Token und das finale
  * Upgrade. Bricht sauber ab, wenn das Signal abgebrochen wird.
  */
 export async function ergaenzeStream(

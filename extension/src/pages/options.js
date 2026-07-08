@@ -1,10 +1,10 @@
-/** Einstellungsseite: Server, Ergaenzung, seitenspezifische Regeln. */
+/** Einstellungsseite: Server, Ergänzung, seitenspezifische Regeln. */
 ;(async () => {
   const $ = (id) => document.getElementById(id)
   let optionen = await self.ffLadeOptionen()
   let profile = [{ id: 'standard', name: 'Standard' }]
 
-  // Einfache Felder fuellen.
+  // Einfache Felder füllen.
   $('serverUrl').value = optionen.serverUrl
   $('modus').value = optionen.modus
   $('anzeigeModus').value = optionen.anzeigeModus

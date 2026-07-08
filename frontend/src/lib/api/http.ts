@@ -2,7 +2,7 @@
  * Zentraler HTTP-Helfer. Kapselt JSON-Parsing und Fehlerbehandlung, damit die
  * fachlichen API-Funktionen schlank bleiben. Das Backend liefert Fehler als
  * FehlerAntwort ({ fehler: { code, meldung, ... } }). Pfade sind relativ (/api/...)
- * und laufen ueber den Vite-Proxy - keine fest verdrahtete Basis-URL.
+ * und laufen über den Vite-Proxy - keine fest verdrahtete Basis-URL.
  */
 
 import type { FehlerAntwort, FehlerDetail } from './typen'

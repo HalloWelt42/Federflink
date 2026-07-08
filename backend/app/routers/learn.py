@@ -1,9 +1,9 @@
-"""Endpunkt Lernsignal: verarbeitet uebernommene Vorschlaege (Lernen Stufe 1).
+"""Endpunkt Lernsignal: verarbeitet übernommene Vorschläge (Lernen Stufe 1).
 
-- Unbekannte Woerter wandern ins persoenliche Woerterbuch (Hunspell kennt sie dann).
-- N-Gramme werden aus dem Umfeld (Text vor dem Cursor + Uebernahme) gelernt,
+- Unbekannte Wörter wandern ins persönliche Wörterbuch (Hunspell kennt sie dann).
+- N-Gramme werden aus dem Umfeld (Text vor dem Cursor + Übernahme) gelernt,
   aber nur wenn der Client den Kontext mitschickt (Datenschutz-Gate 'hier verbessern').
-- Jede Uebernahme/Ablehnung wird fuer die Statusansicht gezaehlt.
+- Jede Übernahme/Ablehnung wird für die Statusansicht gezählt.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ router = APIRouter(tags=["Lernen"])
 @router.post("/learn")
 async def learn(anfrage: LernAnfrage) -> LernAntwort:
     profil = anfrage.profil_id or "standard"
-    roh = anfrage.uebernommen_text  # Rohform: Vorschlag kann Suffix oder fuehrendes Leerzeichen tragen
+    roh = anfrage.uebernommen_text  # Rohform: Vorschlag kann Suffix oder führendes Leerzeichen tragen
     uebernommen = roh.strip()
 
     if not uebernommen:
@@ -29,23 +29,23 @@ async def learn(anfrage: LernAnfrage) -> LernAntwort:
             profil_id=profil,
             host=anfrage.seite.host,
         )
-        return LernAntwort(gelernt=False, hinweis="Nichts uebernommen.")
+        return LernAntwort(gelernt=False, hinweis="Nichts übernommen.")
 
-    # Unbekannte Woerter ins persoenliche Woerterbuch (nicht die Allerweltswoerter).
+    # Unbekannte Wörter ins persönliche Wörterbuch (nicht die Allerweltswörter).
     for wort in tokens.woerter(uebernommen):
         if len(wort) < 3:
             continue
         if hunspell_engine.kennt_wort(wort) is False:
             woerterbuch.hinzufuegen(wort, profil_id=profil, quelle="gelernt")
 
-    # N-Gramme lernen. WICHTIG: direkt aneinanderhaengen (kein zusaetzliches
+    # N-Gramme lernen. WICHTIG: direkt aneinanderhängen (kein zusätzliches
     # Leerzeichen), da der Vorschlag entweder ein Wortsuffix ist (Trie) oder sein
-    # fuehrendes Leerzeichen bereits mitbringt (N-Gramm). Umfeld nur bei mitgeschicktem
+    # führendes Leerzeichen bereits mitbringt (N-Gramm). Umfeld nur bei mitgeschicktem
     # Kontext (Datenschutz-Gate 'hier verbessern').
     basis = f"{anfrage.text_vor}{roh}" if anfrage.text_vor else uebernommen
     ngramm_speicher.lerne_text(basis, profil_id=profil)
 
-    # Umfeld-Kontext (Stufe 2) nur bei laengeren, mehrwortigen Uebernahmen mit
+    # Umfeld-Kontext (Stufe 2) nur bei längeren, mehrwortigen Übernahmen mit
     # mitgeschicktem Kontext lernen - so bleiben die Embedding-Aufrufe sparsam.
     if anfrage.text_vor and " " in uebernommen:
         passage = f"{anfrage.text_vor[-200:]}{roh}".strip()
@@ -58,4 +58,4 @@ async def learn(anfrage: LernAnfrage) -> LernAntwort:
         host=anfrage.seite.host,
         teil_uebernahme=anfrage.teil_uebernahme,
     )
-    return LernAntwort(gelernt=True, hinweis="Woerter und N-Gramme aktualisiert.")
+    return LernAntwort(gelernt=True, hinweis="Wörter und N-Gramme aktualisiert.")

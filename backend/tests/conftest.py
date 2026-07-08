@@ -1,8 +1,8 @@
 """Test-Konfiguration: lenkt die Datenbank auf eine Wegwerf-Datei im Projekt.
 
-So bleiben Tests im Projektordner und ruehren die echte Datenbank nicht an.
-Das Woerterbuch-Verzeichnis bleibt das echte (fuer die Hunspell-/Trie-Tests);
-fehlt es, ueberspringen die betreffenden Tests.
+So bleiben Tests im Projektordner und rühren die echte Datenbank nicht an.
+Das Wörterbuch-Verzeichnis bleibt das echte (für die Hunspell-/Trie-Tests);
+fehlt es, überspringen die betreffenden Tests.
 """
 
 from __future__ import annotations

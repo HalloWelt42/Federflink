@@ -1,8 +1,8 @@
-"""Zentrale Konfiguration: Pfade, Ports, LLM-Anbindung, Ergaenzungs-Grenzen.
+"""Zentrale Konfiguration: Pfade, Ports, LLM-Anbindung, Ergänzungs-Grenzen.
 
-Alle Werte sind per Umgebungsvariable uebersteuerbar (Praefix FEDERFLINK_).
+Alle Werte sind per Umgebungsvariable übersteuerbar (Präfix FEDERFLINK_).
 Die hier definierten Werte sind die eingebauten Standardwerte; die im UI
-aenderbaren Betriebseinstellungen liegen zusaetzlich in der Settings-Tabelle
+änderbaren Betriebseinstellungen liegen zusätzlich in der Settings-Tabelle
 der Datenbank (siehe app.services.einstellungen) und haben Vorrang.
 """
 
@@ -50,7 +50,7 @@ def _env_bool(name: str, standard: bool) -> bool:
 APP_VERSION: str = _lies_version()
 
 # ----------------------------------------------------------------------------
-# Ablage: Datenbank und Woerterbuecher liegen im Projekt (nichts verlaesst den Ordner)
+# Ablage: Datenbank und Wörterbücher liegen im Projekt (nichts verlässt den Ordner)
 # ----------------------------------------------------------------------------
 DATEN_VERZEICHNIS: Path = Path(_env_str("FEDERFLINK_DATEN_DIR", str(PROJEKT_WURZEL / "data")))
 DB_PFAD: Path = Path(_env_str("FEDERFLINK_DB_PFAD", str(DATEN_VERZEICHNIS / "federflink.db")))
@@ -83,14 +83,14 @@ LLM_TIMEOUT_S: float = float(_env_int("FEDERFLINK_LLM_TIMEOUT_S", 30))
 LLM_KURZ_TIMEOUT_S: float = float(_env_int("FEDERFLINK_LLM_KURZ_TIMEOUT_S", 12))
 
 # ----------------------------------------------------------------------------
-# Ergaenzungs-Grenzen (Standardwerte; im UI/Settings feiner steuerbar)
+# Ergänzungs-Grenzen (Standardwerte; im UI/Settings feiner steuerbar)
 # ----------------------------------------------------------------------------
 # Kontextfenster, das der Client um den Cursor herum senden darf.
 BUDGET_VOR_ZEICHEN: int = _env_int("FEDERFLINK_BUDGET_VOR", 800)
 BUDGET_NACH_ZEICHEN: int = _env_int("FEDERFLINK_BUDGET_NACH", 200)
-# Client-Entprellung und Mindestlaenge, bevor ueberhaupt angefragt wird.
+# Client-Entprellung und Mindestlänge, bevor überhaupt angefragt wird.
 DEBOUNCE_MS: int = _env_int("FEDERFLINK_DEBOUNCE_MS", 150)
 MIN_ZEICHEN: int = _env_int("FEDERFLINK_MIN_ZEICHEN", 3)
 MAX_VORSCHLAEGE: int = _env_int("FEDERFLINK_MAX_VORSCHLAEGE", 3)
-# Maximale Textlaenge einer Rechtschreib-/Korrektur-Anfrage (Schutz vor Missbrauch).
+# Maximale Textlänge einer Rechtschreib-/Korrektur-Anfrage (Schutz vor Missbrauch).
 MAX_TEXT_ZEICHEN: int = _env_int("FEDERFLINK_MAX_TEXT_ZEICHEN", 20000)

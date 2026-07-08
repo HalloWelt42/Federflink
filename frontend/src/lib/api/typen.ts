@@ -1,6 +1,6 @@
 /**
  * TypeScript-Spiegel der Backend-Modelle (siehe backend/app/modelle).
- * Bei Aenderungen am Backend hier nachziehen.
+ * Bei Änderungen am Backend hier nachziehen.
  */
 
 export interface FehlerDetail {

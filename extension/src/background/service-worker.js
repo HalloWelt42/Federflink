@@ -2,14 +2,14 @@
  * Federflink Service-Worker (MV3).
  *
  * Besitzt das Netzwerk: er ruft den lokalen Server (SSE) und leitet die Frames
- * ueber einen langlebigen Port an das Content-Skript. Ausserdem: Lernsignale,
- * Zustandsabfrage fuer Popup/Optionen, globaler Schalter (Kurzbefehl) und Badge.
- * Das Netzwerk laeuft hier, weil Content-Skript-Anfragen der Seiten-CORS
- * unterliegen wuerden - der Worker-Ursprung wird vom Server erlaubt.
+ * über einen langlebigen Port an das Content-Skript. Außerdem: Lernsignale,
+ * Zustandsabfrage für Popup/Optionen, globaler Schalter (Kurzbefehl) und Badge.
+ * Das Netzwerk läuft hier, weil Content-Skript-Anfragen der Seiten-CORS
+ * unterliegen würden - der Worker-Ursprung wird vom Server erlaubt.
  */
 importScripts(chrome.runtime.getURL('shared/defaults.js'))
 
-// ----- Vervollstaendigung streamen (pro Port ein Abbruch-Controller) -----
+// ----- Vervollständigung streamen (pro Port ein Abbruch-Controller) -----
 const abbruch = new WeakMap()
 
 chrome.runtime.onConnect.addListener((port) => {
@@ -106,7 +106,7 @@ async function sendeLernsignal(serverUrl, signal) {
   }
 }
 
-// ----- Zustandsabfrage fuer Popup/Optionen -----------------------------
+// ----- Zustandsabfrage für Popup/Optionen -----------------------------
 chrome.runtime.onMessage.addListener((nachricht, _absender, antworten) => {
   if (nachricht.typ === 'zustand') {
     holeZustand(nachricht.serverUrl).then(antworten)

@@ -1,4 +1,4 @@
-"""Tests fuer Schreibprofile und den Umfeld-Kontextspeicher (Embeddings gemockt)."""
+"""Tests für Schreibprofile und den Umfeld-Kontextspeicher (Embeddings gemockt)."""
 
 from __future__ import annotations
 
@@ -58,8 +58,8 @@ async def test_kontext_merken_und_finden(monkeypatch):
 
     monkeypatch.setattr(llm_client, "embed", fake_embed)
 
-    assert await kontext_speicher.merke_passage("Der Apfel ist rot und suess")
-    assert await kontext_speicher.merke_passage("Das Auto faehrt sehr schnell")
+    assert await kontext_speicher.merke_passage("Der Apfel ist rot und süß")
+    assert await kontext_speicher.merke_passage("Das Auto fährt sehr schnell")
     assert kontext_speicher.anzahl() == 2
 
     treffer = await kontext_speicher.aehnliche("Ich mag frischen Apfelsaft", top=1)

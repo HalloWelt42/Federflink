@@ -1,7 +1,7 @@
 """Eingebaute Schreibprofile (Startbestand).
 
-Ein Profil buendelt Ton/Stil (Stilhinweis fuer die LLM-Ergaenzung), ein eigenes
-Woerterbuch/N-Gramm und einen eigenen Umfeld-Kontext. Host-Muster bleiben leer -
+Ein Profil bündelt Ton/Stil (Stilhinweis für die LLM-Ergänzung), ein eigenes
+Wörterbuch/N-Gramm und einen eigenen Umfeld-Kontext. Host-Muster bleiben leer -
 Zuordnungen legt der Nutzer selbst fest (nichts fest verdrahten, keine fremden
 Marken als Vorgabe). Weitere Profile lassen sich im UI anlegen.
 """
@@ -20,9 +20,9 @@ EINGEBAUTE: tuple[Profil, ...] = (
     ),
     Profil(
         id="email-de",
-        name="E-Mail (foermlich)",
-        beschreibung="Hoefliche, foermliche Korrespondenz.",
-        stil_prompt="Schreibe hoeflich und foermlich, sieze die Leser, klar und knapp.",
+        name="E-Mail (förmlich)",
+        beschreibung="Höfliche, förmliche Korrespondenz.",
+        stil_prompt="Schreibe höflich und förmlich, sieze die Leser, klar und knapp.",
         eingebaut=True,
     ),
     Profil(

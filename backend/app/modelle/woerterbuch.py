@@ -1,4 +1,4 @@
-"""Modelle fuer die Verwaltung des persoenlichen Woerterbuchs."""
+"""Modelle für die Verwaltung des persönlichen Wörterbuchs."""
 
 from __future__ import annotations
 

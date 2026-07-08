@@ -2,8 +2,8 @@
 
 Neue Engines entstehen, indem eine Datei ins passende Paket gelegt wird
 (app.pruef_engines bzw. app.ergaenzungs_engines) - der Import beim App-Start
-loest den Dekorator aus, der Capabilities-Endpunkt macht sie dem Frontend und
-der Browser-Erweiterung ohne weitere Aenderung bekannt.
+löst den Dekorator aus, der Capabilities-Endpunkt macht sie dem Frontend und
+der Browser-Erweiterung ohne weitere Änderung bekannt.
 """
 
 from __future__ import annotations
@@ -57,13 +57,13 @@ ergaenzungs_engines: Registry[ErgaenzungsEngine] = Registry("ErgaenzungsEngine")
 
 
 def pruef_engine[E: PruefEngine](cls: type[E]) -> type[E]:
-    """Klassen-Dekorator: registriert eine Instanz der Pruef-Engine unter ihrer engine_id."""
+    """Klassen-Dekorator: registriert eine Instanz der Prüf-Engine unter ihrer engine_id."""
     pruef_engines.registriere(cls.engine_id, cls())
     return cls
 
 
 def ergaenzungs_engine[E: ErgaenzungsEngine](cls: type[E]) -> type[E]:
-    """Klassen-Dekorator: registriert eine Instanz der Ergaenzungs-Engine unter ihrer engine_id."""
+    """Klassen-Dekorator: registriert eine Instanz der Ergänzungs-Engine unter ihrer engine_id."""
     ergaenzungs_engines.registriere(cls.engine_id, cls())
     return cls
 
@@ -73,7 +73,7 @@ _entdeckt = False
 
 
 def entdecke_module() -> None:
-    """Importiert alle Untermodule der Engine-Pakete; Importe loesen die Dekoratoren aus."""
+    """Importiert alle Untermodule der Engine-Pakete; Importe lösen die Dekoratoren aus."""
     global _entdeckt
     if _entdeckt:
         return
@@ -127,7 +127,7 @@ def _sicher_verfuegbar(eintrag: object) -> bool:
 
 async def capabilities() -> CapabilitiesAntwort:
     # LLM-Status ist kurz zwischengespeichert (siehe llm_client), damit dieser
-    # Endpunkt schnell bleibt, auch wenn kein Modell-Server laeuft.
+    # Endpunkt schnell bleibt, auch wenn kein Modell-Server läuft.
     from app.profile.dienst import profil_infos
     from app.services import llm_client
 

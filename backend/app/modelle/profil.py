@@ -1,4 +1,4 @@
-"""Modelle fuer Schreibprofile."""
+"""Modelle für Schreibprofile."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ class Profil(BaseModel):
     name: str
     sprache: str = "de"
     beschreibung: str = ""
-    stil_prompt: str = Field(default="", description="Stilhinweis fuer die LLM-Ergaenzung")
+    stil_prompt: str = Field(default="", description="Stilhinweis für die LLM-Ergänzung")
     host_muster: list[str] = Field(default_factory=list, description="Host-Muster -> dieses Profil")
     aktiv: bool = True
     eingebaut: bool = False

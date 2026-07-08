@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Federflink",
   "version": "0.6.0",
-  "description": "Deutsche Rechtschreibung und Textergaenzung als Vorschau in beliebigen Eingabefeldern.",
+  "description": "Deutsche Rechtschreibung und Textergänzung als Vorschau in beliebigen Eingabefeldern.",
   "author": "HalloWelt42",
   "permissions": ["storage", "activeTab"],
   "host_permissions": ["http://localhost/*", "http://127.0.0.1/*"],

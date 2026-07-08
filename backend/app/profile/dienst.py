@@ -1,7 +1,7 @@
 """Profil-Dienst: verbindet eingebaute Profile mit benutzerdefinierten (SQLite).
 
-Eingebaute Profile sind schreibgeschuetzt; benutzerdefinierte lassen sich anlegen,
-aendern und loeschen. Host-Muster ordnen Seiten automatisch einem Profil zu.
+Eingebaute Profile sind schreibgeschützt; benutzerdefinierte lassen sich anlegen,
+ändern und löschen. Host-Muster ordnen Seiten automatisch einem Profil zu.
 """
 
 from __future__ import annotations
@@ -114,7 +114,7 @@ def anlegen(anlage: ProfilAnlage) -> Profil:
 
 
 def entfernen(profil_id: str) -> bool:
-    """Loescht ein benutzerdefiniertes Profil. Eingebaute bleiben unberuehrt."""
+    """Löscht ein benutzerdefiniertes Profil. Eingebaute bleiben unberührt."""
     if any(e.id == profil_id for e in EINGEBAUTE):
         return False
     with get_db().connect() as conn:

@@ -1,8 +1,8 @@
-"""Fuehrt die Ergaenzungs-Engines aus und mischt ihre Vorschlaege.
+"""Führt die Ergänzungs-Engines aus und mischt ihre Vorschläge.
 
-Der Instant-Pfad (ergaenze) fuehrt nur die schnellen, nicht-streamenden Engines
-(Trie, N-Gramm) aus - er bleibt auch dann schnell, wenn spaeter eine langsame
-LLM-Engine hinzukommt (die laeuft ueber den SSE-Pfad, Phase 3).
+Der Instant-Pfad (ergaenze) führt nur die schnellen, nicht-streamenden Engines
+(Trie, N-Gramm) aus - er bleibt auch dann schnell, wenn später eine langsame
+LLM-Engine hinzukommt (die läuft über den SSE-Pfad, Phase 3).
 """
 
 from __future__ import annotations
@@ -35,7 +35,7 @@ def waehle_engines(angefragt: list[str] | None, *, nur_instant: bool) -> list[ob
 
 
 def mische(vorschlaege: list[Vorschlag], max_vorschlaege: int) -> list[Vorschlag]:
-    """Nach Score sortieren und nach Einfuegetext entdoppeln."""
+    """Nach Score sortieren und nach Einfügetext entdoppeln."""
     vorschlaege.sort(key=lambda v: v.score, reverse=True)
     gesehen: set[str] = set()
     ergebnis: list[Vorschlag] = []
@@ -69,7 +69,7 @@ async def ergaenze(anfrage: ErgaenzungsAnfrage, *, kontext: str | None = None) -
         status[eid] = "ok"
         alle.extend(ergebnis)
 
-    # Ob spaeter ein LLM-Upgrade nachkommen koennte (Phase 3): wenn eine
+    # Ob später ein LLM-Upgrade nachkommen könnte (Phase 3): wenn eine
     # streamende Engine aktiv/angefragt ist.
     streaming_moeglich = bool(waehle_engines(anfrage.engines, nur_instant=False)) and any(
         getattr(e, "streaming", False) for e in waehle_engines(anfrage.engines, nur_instant=False)

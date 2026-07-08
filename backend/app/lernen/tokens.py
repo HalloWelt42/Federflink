@@ -9,7 +9,7 @@ _TEILWORT_AM_ENDE = re.compile(r"[A-Za-zÄÖÜäöüß]+$")
 
 
 def woerter(text: str) -> list[str]:
-    """Alle Woerter in Originalschreibung."""
+    """Alle Wörter in Originalschreibung."""
     return _WORT.findall(text)
 
 

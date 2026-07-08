@@ -1,8 +1,8 @@
 /* ============================================================================
    Federflink - Design-Token
-   Eine ruhige, eckige Oberflaeche mit teal-gruenem Akzent. Drei Themes:
+   Eine ruhige, eckige Oberfläche mit teal-grünem Akzent. Drei Themes:
    Mittelton (Standard), Hell, Dunkel. Nur Variablen - Komponenten referenzieren
-   ausschliesslich diese Token, nie Rohfarben.
+   ausschließlich diese Token, nie Rohfarben.
    ========================================================================== */
 
 :root {
@@ -10,13 +10,13 @@
   --schrift-anzeige: "Barlow", system-ui, -apple-system, sans-serif;
   --schrift-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
-  /* Kanten: alles eckig, nur Knoepfe leicht gerundet */
+  /* Kanten: alles eckig, nur Knöpfe leicht gerundet */
   --radius-panel: 0;
   --radius-eingabe: 0;
   --radius-tab: 0;
   --radius-knopf: 3px;
 
-  /* Abstaende */
+  /* Abstände */
   --a1: 4px;
   --a2: 8px;
   --a3: 12px;

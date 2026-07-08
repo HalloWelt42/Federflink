@@ -9,7 +9,7 @@
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
     if (tab && tab.url) host = new URL(tab.url).hostname
   } catch {
-    /* keine Berechtigung fuer diese Seite */
+    /* keine Berechtigung für diese Seite */
   }
   $('host').textContent = host || 'dieser Seite'
   const seite = self.ffSeite(optionen, host)
