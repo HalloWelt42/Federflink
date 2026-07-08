@@ -17,6 +17,14 @@ Kleine, mehrsprachige Modelle mit guter deutscher Ausgabe, quantisiert (Q4):
 Fuer kurze Ergaenzungen (wenige Woerter bis ein Satz) reichen kleine Modelle;
 Ausgabe wird gestreamt, damit die Vorschau schnell erscheint.
 
+**Wichtig:** Ein normales Instruct-Modell verwenden, KEIN Reasoning-Modell.
+Reasoning-Modelle geben zuerst laengeres Nachdenken aus; bei den kurzen
+Token-Grenzen der Ergaenzung kommt dann keine brauchbare Fortsetzung an.
+Federflink filtert zwar `<think>`-Bloecke heraus, doch die eigentliche Antwort
+bleibt bei reinen Reasoning-Modellen oft aus. Ist nur ein Reasoning-Modell
+geladen, funktionieren Rechtschreibung und Trie/N-Gramm weiter - nur der
+LLM-Vorschlag bleibt leer.
+
 ## Embeddings (Umfeld-Kontext, Phase 4)
 
 | Modell | Hinweis |

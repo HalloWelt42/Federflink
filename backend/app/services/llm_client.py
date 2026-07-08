@@ -12,7 +12,9 @@ Kernpunkte:
 from __future__ import annotations
 
 import ipaddress
+import json
 import time
+from collections.abc import AsyncIterator
 from urllib.parse import urlparse
 
 import httpx
@@ -147,9 +149,61 @@ async def chat(
         return ""
 
 
+async def chat_stream(
+    messages: list[dict[str, str]],
+    *,
+    model: str | None = None,
+    url: str | None = None,
+    temperature: float = 0.2,
+    max_tokens: int = -1,
+    timeout: float | None = None,
+) -> AsyncIterator[str]:
+    """Streamt eine Chat-Completion und liefert die Text-Deltas nacheinander."""
+    base = (url or basis_url()).rstrip("/")
+    pruefe_url(base)
+    verwendetes = await resolve_chat_modell(base, model)
+    payload: dict[str, object] = {
+        "model": verwendetes,
+        "messages": messages,
+        "temperature": temperature,
+        "stream": True,
+    }
+    if max_tokens and max_tokens > 0:
+        payload["max_tokens"] = max_tokens
+    async with httpx.AsyncClient(timeout=timeout or config.LLM_TIMEOUT_S) as client:
+        async with client.stream("POST", f"{base}/v1/chat/completions", json=payload) as resp:
+            if resp.status_code != 200:
+                await resp.aread()
+                raise LlmFehler(f"Streaming fehlgeschlagen (HTTP {resp.status_code}).")
+            async for zeile in resp.aiter_lines():
+                if not zeile or not zeile.startswith("data:"):
+                    continue
+                rest = zeile[5:].strip()
+                if rest == "[DONE]":
+                    break
+                try:
+                    obj = json.loads(rest)
+                    delta = obj["choices"][0]["delta"].get("content")
+                except (json.JSONDecodeError, KeyError, IndexError):
+                    continue
+                if delta:
+                    yield delta
+
+
 # ---- Zustands-Auskunft (kurz zwischengespeichert, damit /capabilities schnell bleibt) ----
 _status_cache: tuple[float, dict[str, object]] | None = None
 _STATUS_TTL = 5.0
+
+
+def zuletzt_erreichbar() -> bool:
+    """Letzter bekannter Erreichbarkeitszustand ohne Netzaufruf (fuer ist_verfuegbar).
+
+    Ohne bisherigen Status optimistisch True - ein echter Ausfall wird beim Aufruf
+    ohnehin sauber abgefangen.
+    """
+    if _status_cache is None:
+        return True
+    return bool(_status_cache[1].get("erreichbar", False))
 
 
 async def status(url: str | None = None) -> dict[str, object]:

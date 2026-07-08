@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte'
 
-  import { ergaenze, lerne } from '../api/ergaenzung'
+  import { ergaenzeStream, lerne } from '../api/ergaenzung'
   import { ladeCapabilities } from '../api/system'
   import type { CapabilitiesAntwort, ErgaenzungsModus, LernStatus, Vorschlag } from '../api/typen'
   import { requestJson } from '../api/http'
@@ -42,31 +42,38 @@
     entprellung = setTimeout(anfordern, ms)
   }
 
-  async function anfordern() {
+  function anfordern() {
     laufend?.abort()
     const controller = new AbortController()
     laufend = controller
     fehler = ''
-    try {
-      const antwort = await ergaenze(
-        {
-          text_vor: textVor,
-          text_nach: textNach,
-          modus,
-          profil_id: profil,
-          max_vorschlaege: caps?.grenzen.max_vorschlaege ?? 3,
-          seite: { host: 'spielwiese', feld_art: 'textarea', sprach_hinweis: 'de' },
+    void ergaenzeStream(
+      {
+        text_vor: textVor,
+        text_nach: textNach,
+        modus,
+        profil_id: profil,
+        max_vorschlaege: caps?.grenzen.max_vorschlaege ?? 3,
+        seite: { host: 'spielwiese', feld_art: 'textarea', sprach_hinweis: 'de' },
+      },
+      {
+        beiInstant: (vs) => {
+          vorschlag = vs[0] ?? null
+          alternativen = vs.slice(1)
         },
-        controller.signal,
-      )
-      vorschlag = antwort.vorschlaege[0] ?? null
-      alternativen = antwort.vorschlaege.slice(1)
-    } catch (e) {
-      if (e instanceof DOMException && e.name === 'AbortError') return
-      fehler = e instanceof Error ? e.message : String(e)
-      vorschlag = null
-      alternativen = []
-    }
+        beiUpgrade: (vs) => {
+          // Besseren LLM-Vorschlag voranstellen, den Instant-Vorschlag als Alternative behalten.
+          if (vs[0]) {
+            if (vorschlag) alternativen = [vorschlag, ...alternativen].slice(0, 3)
+            vorschlag = vs[0]
+          }
+        },
+        beiFehler: (e) => {
+          fehler = e instanceof Error ? e.message : String(e)
+        },
+      },
+      controller.signal,
+    )
   }
 
   function verwerfen() {
