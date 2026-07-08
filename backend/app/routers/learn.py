@@ -8,7 +8,7 @@
 
 from __future__ import annotations
 
-from app.lernen import ngramm_speicher, telemetrie, tokens, woerterbuch
+from app.lernen import kontext_speicher, ngramm_speicher, telemetrie, tokens, woerterbuch
 from app.modelle.ergaenzung import LernAnfrage, LernAntwort
 from app.pruef_engines import hunspell_engine
 from fastapi import APIRouter
@@ -17,7 +17,7 @@ router = APIRouter(tags=["Lernen"])
 
 
 @router.post("/learn")
-def learn(anfrage: LernAnfrage) -> LernAntwort:
+async def learn(anfrage: LernAnfrage) -> LernAntwort:
     profil = anfrage.profil_id or "standard"
     roh = anfrage.uebernommen_text  # Rohform: Vorschlag kann Suffix oder fuehrendes Leerzeichen tragen
     uebernommen = roh.strip()
@@ -44,6 +44,12 @@ def learn(anfrage: LernAnfrage) -> LernAntwort:
     # Kontext (Datenschutz-Gate 'hier verbessern').
     basis = f"{anfrage.text_vor}{roh}" if anfrage.text_vor else uebernommen
     ngramm_speicher.lerne_text(basis, profil_id=profil)
+
+    # Umfeld-Kontext (Stufe 2) nur bei laengeren, mehrwortigen Uebernahmen mit
+    # mitgeschicktem Kontext lernen - so bleiben die Embedding-Aufrufe sparsam.
+    if anfrage.text_vor and " " in uebernommen:
+        passage = f"{anfrage.text_vor[-200:]}{roh}".strip()
+        await kontext_speicher.merke_passage(passage, profil_id=profil, host=anfrage.seite.host)
 
     telemetrie.erfasse(
         engine=anfrage.uebernommen_engine or "",

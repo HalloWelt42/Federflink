@@ -55,6 +55,7 @@ class EngineAnnahme(BaseModel):
 class LernStatus(BaseModel):
     woerter: int
     ngramme: int
+    kontext: int
     annahmen: list[EngineAnnahme]
 
 

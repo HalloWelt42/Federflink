@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from app import config, registry
-from app.lernen import ngramm_speicher, telemetrie, woerterbuch
+from app.lernen import kontext_speicher, ngramm_speicher, telemetrie, woerterbuch
 from app.modelle.system import (
     CapabilitiesAntwort,
     EngineAnnahme,
@@ -45,4 +45,9 @@ def status() -> LernStatus:
         )
         for z in telemetrie.zusammenfassung()
     ]
-    return LernStatus(woerter=woerterbuch.anzahl(), ngramme=ngramm_speicher.anzahl(), annahmen=annahmen)
+    return LernStatus(
+        woerter=woerterbuch.anzahl(),
+        ngramme=ngramm_speicher.anzahl(),
+        kontext=kontext_speicher.anzahl(),
+        annahmen=annahmen,
+    )

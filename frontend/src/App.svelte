@@ -3,6 +3,7 @@
 
   import { ladeHealth } from './lib/api/system'
   import ErgaenzungAnsicht from './lib/ansichten/ErgaenzungAnsicht.svelte'
+  import ProfileAnsicht from './lib/ansichten/ProfileAnsicht.svelte'
   import SpielwieseAnsicht from './lib/ansichten/SpielwieseAnsicht.svelte'
   import StatusAnsicht from './lib/ansichten/StatusAnsicht.svelte'
   import WoerterbuchAnsicht from './lib/ansichten/WoerterbuchAnsicht.svelte'
@@ -10,18 +11,18 @@
 
   const version = __APP_VERSION__
 
-  type AnsichtId = 'spielwiese' | 'ergaenzung' | 'woerterbuch' | 'status'
+  type AnsichtId = 'spielwiese' | 'ergaenzung' | 'woerterbuch' | 'profile' | 'status'
   interface Ansicht {
     id: AnsichtId
     name: string
     icon: string
   }
 
-  // Weitere Ansichten (Profile, Einstellungen) kommen mit den naechsten Phasen hinzu.
   const ansichten: Ansicht[] = [
     { id: 'spielwiese', name: 'Rechtschreibung', icon: 'fa-spell-check' },
     { id: 'ergaenzung', name: 'Ergaenzung', icon: 'fa-wand-sparkles' },
     { id: 'woerterbuch', name: 'Woerterbuch', icon: 'fa-book' },
+    { id: 'profile', name: 'Profile', icon: 'fa-user-pen' },
     { id: 'status', name: 'Status', icon: 'fa-gauge-high' },
   ]
 
@@ -94,6 +95,8 @@
         <ErgaenzungAnsicht />
       {:else if aktuelleAnsicht === 'woerterbuch'}
         <WoerterbuchAnsicht />
+      {:else if aktuelleAnsicht === 'profile'}
+        <ProfileAnsicht />
       {:else if aktuelleAnsicht === 'status'}
         <StatusAnsicht />
       {/if}

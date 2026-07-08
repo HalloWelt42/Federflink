@@ -134,6 +134,7 @@
       <div class="kennzahl-raster" style="margin-bottom: var(--a3)">
         <div class="kennzahl"><div class="kz-wert">{lernStatus.woerter}</div><div class="kz-name">Gelernte Woerter</div></div>
         <div class="kennzahl"><div class="kz-wert">{lernStatus.ngramme}</div><div class="kz-name">N-Gramme</div></div>
+        <div class="kennzahl"><div class="kz-wert">{lernStatus.kontext}</div><div class="kz-name">Kontext-Passagen</div></div>
       </div>
       {#if lernStatus.annahmen.length}
         <table class="tabelle">

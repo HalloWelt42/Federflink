@@ -149,6 +149,46 @@ async def chat(
         return ""
 
 
+async def resolve_embedding_modell(url: str | None = None, preferred: str | None = None) -> str:
+    """Bestimmt ein Embedding-Modell (Heuristik: 'embed' im Namen)."""
+    base = (url or basis_url()).rstrip("/")
+    kandidat = (preferred or config.DEFAULT_EMBEDDING_MODELL or "").strip()
+    if kandidat:
+        return kandidat
+    modelle = await list_models(base)
+    if not modelle:
+        raise LlmFehler("Kein Embedding-Modell gemeldet.")
+    for m in modelle:
+        if "embed" in m.lower():
+            return m
+    return modelle[0]
+
+
+async def embed(
+    texte: list[str], *, model: str | None = None, url: str | None = None, timeout: float | None = None
+) -> tuple[list[list[float]], str, int]:
+    """Bettet Texte ein. Liefert (Vektoren, verwendetes Modell, Dimension)."""
+    if not texte:
+        return [], (model or ""), 0
+    base = (url or basis_url()).rstrip("/")
+    pruefe_url(base)
+    verwendetes = await resolve_embedding_modell(base, model)
+    try:
+        async with httpx.AsyncClient(timeout=timeout or config.LLM_TIMEOUT_S) as client:
+            resp = await client.post(
+                f"{base}/v1/embeddings", json={"model": verwendetes, "input": texte}
+            )
+            resp.raise_for_status()
+            data = resp.json()
+    except httpx.HTTPError as exc:
+        raise LlmFehler(f"Embedding fehlgeschlagen: {exc}") from exc
+    eintraege = sorted(data.get("data", []), key=lambda d: d.get("index", 0))
+    vektoren = [e["embedding"] for e in eintraege]
+    if not vektoren:
+        raise LlmFehler("Keine Embeddings erhalten.")
+    return vektoren, verwendetes, len(vektoren[0])
+
+
 async def chat_stream(
     messages: list[dict[str, str]],
     *,

@@ -1,35 +1,35 @@
-"""Eingebaute Schreibprofile.
+"""Eingebaute Schreibprofile (Startbestand).
 
-Ein Profil buendelt Ton/Stil, ein eigenes Woerterbuch und (ab Phase 4) einen
-eigenen Umfeld-Kontext. Diese Vorgaben lassen sich im UI erweitern und aendern;
-sie sind nur der Startbestand, nichts ist fest verdrahtet.
+Ein Profil buendelt Ton/Stil (Stilhinweis fuer die LLM-Ergaenzung), ein eigenes
+Woerterbuch/N-Gramm und einen eigenen Umfeld-Kontext. Host-Muster bleiben leer -
+Zuordnungen legt der Nutzer selbst fest (nichts fest verdrahten, keine fremden
+Marken als Vorgabe). Weitere Profile lassen sich im UI anlegen.
 """
 
 from __future__ import annotations
 
-from app.modelle.system import ProfilInfo
+from app.modelle.profil import Profil
 
-STANDARD_PROFILE: tuple[ProfilInfo, ...] = (
-    ProfilInfo(
+EINGEBAUTE: tuple[Profil, ...] = (
+    Profil(
         id="standard",
         name="Standard",
-        sprache="de",
         beschreibung="Allgemeines Schreiben ohne besonderen Ton.",
+        stil_prompt="",
+        eingebaut=True,
     ),
-    ProfilInfo(
+    Profil(
         id="email-de",
         name="E-Mail (foermlich)",
-        sprache="de",
         beschreibung="Hoefliche, foermliche Korrespondenz.",
+        stil_prompt="Schreibe hoeflich und foermlich, sieze die Leser, klar und knapp.",
+        eingebaut=True,
     ),
-    ProfilInfo(
+    Profil(
         id="chat-de",
         name="Chat (locker)",
-        sprache="de",
         beschreibung="Kurze, lockere Nachrichten.",
+        stil_prompt="Schreibe locker, kurz und freundlich, wie in einer Chat-Nachricht.",
+        eingebaut=True,
     ),
 )
-
-
-def standard_profile() -> list[ProfilInfo]:
-    return list(STANDARD_PROFILE)

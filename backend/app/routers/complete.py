@@ -35,6 +35,21 @@ def _streamende_engine(anfrage: ErgaenzungsAnfrage) -> object | None:
     return None
 
 
+async def _umfeld_kontext(anfrage: ErgaenzungsAnfrage) -> str | None:
+    """Stilhinweis des Profils + aehnliche gelernte Passagen (Lernen Stufe 2)."""
+    from app.lernen import kontext_speicher
+    from app.profile import dienst
+
+    profil = anfrage.profil_id or "standard"
+    teile: list[str] = []
+    stil = dienst.stil_prompt(profil)
+    if stil:
+        teile.append(stil)
+    for passage in await kontext_speicher.aehnliche(anfrage.text_vor, profil_id=profil):
+        teile.append(f"- {passage}")
+    return "\n".join(teile) if teile else None
+
+
 async def _sse(anfrage: ErgaenzungsAnfrage, request: Request) -> AsyncIterator[str]:
     instant = await dispatcher.ergaenze(anfrage)
     yield _frame(
@@ -52,8 +67,7 @@ async def _sse(anfrage: ErgaenzungsAnfrage, request: Request) -> AsyncIterator[s
         yield _frame("done", {"request_id": anfrage.request_id})
         return
 
-    # Umfeld-Kontext (Phase 4) - hier noch None.
-    kontext: str | None = None
+    kontext = await _umfeld_kontext(anfrage)
     gesammelt = ""
     try:
         async for delta in engine.stream(anfrage, kontext):  # type: ignore[attr-defined]

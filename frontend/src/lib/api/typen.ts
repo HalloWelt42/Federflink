@@ -129,5 +129,17 @@ export interface EngineAnnahme {
 export interface LernStatus {
   woerter: number
   ngramme: number
+  kontext: number
   annahmen: EngineAnnahme[]
+}
+
+export interface Profil {
+  id: string
+  name: string
+  sprache: string
+  beschreibung: string
+  stil_prompt: string
+  host_muster: string[]
+  aktiv: boolean
+  eingebaut: boolean
 }

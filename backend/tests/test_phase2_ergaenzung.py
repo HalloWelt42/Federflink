@@ -31,11 +31,12 @@ async def test_ngram_lernt_und_sagt_vorher():
     assert any("Gruessen" in t for t in texte)
 
 
-def test_learn_fuegt_unbekanntes_wort_hinzu_und_lernt_ngramme():
-    antwort = learn(
+async def test_learn_fuegt_unbekanntes_wort_hinzu_und_lernt_ngramme():
+    # Einzelwort-Uebernahme (kein Leerzeichen) -> kein Embedding-Aufruf, kein Netz.
+    antwort = await learn(
         LernAnfrage(
-            uebernommen_text="Blupfwort testweise",
-            text_vor="Ich schreibe ein",
+            uebernommen_text="Blupfwort",
+            text_vor="Ich schreibe ein ",
             uebernommen_engine="trie",
         )
     )
