@@ -1,0 +1,153 @@
+/* ============================================================================
+   Federflink - Design-Token
+   Eine ruhige, eckige Oberflaeche mit teal-gruenem Akzent. Drei Themes:
+   Mittelton (Standard), Hell, Dunkel. Nur Variablen - Komponenten referenzieren
+   ausschliesslich diese Token, nie Rohfarben.
+   ========================================================================== */
+
+:root {
+  /* Schrift */
+  --schrift-anzeige: "Barlow", system-ui, -apple-system, sans-serif;
+  --schrift-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Kanten: alles eckig, nur Knoepfe leicht gerundet */
+  --radius-panel: 0;
+  --radius-eingabe: 0;
+  --radius-tab: 0;
+  --radius-knopf: 3px;
+
+  /* Abstaende */
+  --a1: 4px;
+  --a2: 8px;
+  --a3: 12px;
+  --a4: 16px;
+  --a5: 24px;
+  --a6: 32px;
+
+  --zeile-h: 28px;
+  --schnell: 0.12s ease;
+}
+
+/* Mittelton (Standard): weder hell noch dunkel */
+:root,
+:root[data-theme="mittelton"] {
+  --flaeche-seite: #a6a6a6;
+  --flaeche-leiste: #979797;
+  --flaeche-panel: #cbcbcb;
+  --flaeche-panel-2: #bdbdbd;
+  --flaeche-eingabe: #d8d8d1;
+  --flaeche-hervorhebung: #ffffe3;
+  --flaeche-zeile-wechsel: rgba(0, 0, 0, 0.03);
+
+  --text-1: #262626;
+  --text-2: #4a4a4a;
+  --text-3: #616161;
+
+  --rand-1: rgba(20, 20, 20, 0.22);
+  --rand-2: rgba(20, 20, 20, 0.38);
+
+  --akzent: #3f7d6b;
+  --akzent-stark: #2f6154;
+  --akzent-weich: rgba(63, 125, 107, 0.20);
+  --auf-akzent: #f2f6f4;
+  --zweitakzent: #7a684f;
+
+  --zustand-erfolg: #3f6b4e;
+  --zustand-erfolg-weich: rgba(109, 150, 120, 0.22);
+  --zustand-warnung: #7d6233;
+  --zustand-warnung-weich: rgba(168, 137, 79, 0.22);
+  --zustand-fehler: #7e403c;
+  --zustand-fehler-weich: rgba(156, 95, 90, 0.22);
+  --zustand-info: #3f6156;
+  --zustand-info-weich: rgba(63, 125, 107, 0.16);
+
+  --geist: #6f6f6f; /* Vorschau-Grauton (Geistertext) */
+
+  --diff-hinzu: rgba(109, 150, 120, 0.30);
+  --diff-weg: rgba(156, 95, 90, 0.30);
+
+  --schatten-1: 0 1px 2px rgba(20, 20, 20, 0.14);
+  --schatten-2: 0 8px 28px rgba(20, 20, 20, 0.28);
+}
+
+/* Hell */
+:root[data-theme="hell"] {
+  --flaeche-seite: #ececec;
+  --flaeche-leiste: #e2e2e2;
+  --flaeche-panel: #f6f6f4;
+  --flaeche-panel-2: #ebebe8;
+  --flaeche-eingabe: #ffffff;
+  --flaeche-hervorhebung: #fffce0;
+  --flaeche-zeile-wechsel: rgba(0, 0, 0, 0.025);
+
+  --text-1: #1e1e1e;
+  --text-2: #3d3d3d;
+  --text-3: #6a6a6a;
+
+  --rand-1: rgba(20, 20, 20, 0.12);
+  --rand-2: rgba(20, 20, 20, 0.22);
+
+  --akzent: #34715f;
+  --akzent-stark: #285749;
+  --akzent-weich: rgba(52, 113, 95, 0.16);
+  --auf-akzent: #f6faf8;
+  --zweitakzent: #6f5f48;
+
+  --zustand-erfolg: #35604a;
+  --zustand-erfolg-weich: rgba(109, 150, 120, 0.20);
+  --zustand-warnung: #71592d;
+  --zustand-warnung-weich: rgba(168, 137, 79, 0.20);
+  --zustand-fehler: #7a3b37;
+  --zustand-fehler-weich: rgba(156, 95, 90, 0.20);
+  --zustand-info: #34715f;
+  --zustand-info-weich: rgba(52, 113, 95, 0.14);
+
+  --geist: #9a9a9a;
+
+  --diff-hinzu: rgba(109, 150, 120, 0.28);
+  --diff-weg: rgba(156, 95, 90, 0.28);
+
+  --schatten-1: 0 1px 2px rgba(20, 20, 20, 0.10);
+  --schatten-2: 0 8px 28px rgba(20, 20, 20, 0.18);
+}
+
+/* Dunkel */
+:root[data-theme="dunkel"] {
+  --flaeche-seite: #232625;
+  --flaeche-leiste: #2b2e2d;
+  --flaeche-panel: #343837;
+  --flaeche-panel-2: #3e4241;
+  --flaeche-eingabe: #2a2d2c;
+  --flaeche-hervorhebung: rgba(255, 255, 227, 0.16);
+  --flaeche-zeile-wechsel: rgba(255, 255, 255, 0.025);
+
+  --text-1: #e6e6e6;
+  --text-2: #cbcbcb;
+  --text-3: #9a9a9a;
+
+  --rand-1: rgba(255, 255, 255, 0.12);
+  --rand-2: rgba(255, 255, 255, 0.24);
+
+  --akzent: #7db8a6;
+  --akzent-stark: #9fd0c1;
+  --akzent-weich: rgba(125, 184, 166, 0.22);
+  --auf-akzent: #1f2624;
+  --zweitakzent: #bda98d;
+
+  --zustand-erfolg: #8fbf9d;
+  --zustand-erfolg-weich: rgba(109, 150, 120, 0.26);
+  --zustand-warnung: #c9a96b;
+  --zustand-warnung-weich: rgba(168, 137, 79, 0.26);
+  --zustand-fehler: #c98883;
+  --zustand-fehler-weich: rgba(156, 95, 90, 0.28);
+  --zustand-info: #7db8a6;
+  --zustand-info-weich: rgba(125, 184, 166, 0.20);
+
+  --geist: #8a8a8a;
+
+  --diff-hinzu: rgba(109, 150, 120, 0.28);
+  --diff-weg: rgba(156, 95, 90, 0.28);
+
+  --schatten-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --schatten-2: 0 8px 28px rgba(0, 0, 0, 0.55);
+}

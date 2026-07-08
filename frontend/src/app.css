@@ -1,0 +1,514 @@
+/* ============================================================================
+   Federflink - Komponentenstile. Referenziert nur Token aus theme/tokens.css.
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--schrift-anzeige);
+  font-size: 14px;
+  color: var(--text-1);
+  background: var(--flaeche-seite);
+}
+
+code,
+pre,
+.mono {
+  font-family: var(--schrift-mono);
+  font-size: 0.86em;
+}
+
+a {
+  color: var(--akzent);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--akzent-weich);
+}
+
+/* ----- App-Raster --------------------------------------------------------- */
+
+.app {
+  display: grid;
+  height: 100vh;
+  grid-template-rows: 46px 1fr 26px;
+  grid-template-areas:
+    "kopf"
+    "haupt"
+    "status";
+}
+
+.kopf {
+  grid-area: kopf;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  background: var(--flaeche-leiste);
+  border-bottom: 1px solid var(--rand-2);
+  padding: 0 var(--a4);
+}
+
+.marke {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.marke i {
+  color: var(--akzent);
+}
+
+.marke .version {
+  font-size: 0.72rem;
+  color: var(--text-3);
+  font-weight: 400;
+}
+
+.kopf-nav {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  height: 100%;
+  margin-left: var(--a4);
+}
+
+.kopf-rechts {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  margin-left: auto;
+}
+
+.reiter {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: 0 var(--a3);
+  color: var(--text-2);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.reiter:hover {
+  color: var(--text-1);
+  background: var(--akzent-weich);
+}
+
+.reiter.aktiv {
+  color: var(--text-1);
+  border-bottom-color: var(--akzent);
+  font-weight: 500;
+}
+
+.haupt {
+  grid-area: haupt;
+  min-height: 0;
+  overflow: auto;
+  background: var(--flaeche-panel);
+  padding: var(--a5);
+}
+
+.inhalt {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--a4);
+}
+
+.status {
+  grid-area: status;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: 0 var(--a4);
+  background: var(--flaeche-leiste);
+  border-top: 1px solid var(--rand-2);
+  font-size: 0.78rem;
+  color: var(--text-2);
+}
+
+.status-rechts {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+}
+
+/* ----- Knoepfe, Felder, Schalter ------------------------------------------ */
+
+.knopf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a2);
+  height: 30px;
+  padding: 0 var(--a3);
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-knopf);
+  background: var(--flaeche-panel);
+  color: var(--text-1);
+  font-family: var(--schrift-anzeige);
+  font-size: 0.88rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--schnell);
+}
+
+.knopf:hover {
+  background: var(--akzent-weich);
+}
+
+.knopf.primaer {
+  background: var(--akzent);
+  border-color: var(--akzent-stark);
+  color: var(--auf-akzent);
+}
+
+.knopf.primaer:hover {
+  background: var(--akzent-stark);
+}
+
+.knopf.gefahr {
+  color: var(--zustand-fehler);
+  border-color: var(--zustand-fehler);
+}
+
+.knopf.klein {
+  height: 24px;
+  padding: 0 var(--a2);
+  font-size: 0.8rem;
+}
+
+.knopf:disabled,
+.knopf.deaktiviert {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.icon-knopf {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-knopf);
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+}
+
+.icon-knopf:hover {
+  background: var(--akzent-weich);
+  color: var(--text-1);
+}
+
+.feld {
+  height: 30px;
+  padding: 0 var(--a2);
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-eingabe);
+  background: var(--flaeche-eingabe);
+  color: var(--text-1);
+  font-family: var(--schrift-anzeige);
+  font-size: 0.88rem;
+  width: 100%;
+}
+
+.feld:focus {
+  outline: 2px solid var(--akzent);
+  outline-offset: -1px;
+}
+
+textarea.feld {
+  height: auto;
+  padding: var(--a2);
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.feld-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+
+.beschriftung {
+  font-size: 0.8rem;
+  color: var(--text-2);
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-eingabe);
+  background: var(--flaeche-eingabe);
+  color: transparent;
+  font-size: 0.7rem;
+  flex: none;
+  cursor: pointer;
+}
+
+.checkbox.an {
+  background: var(--akzent);
+  border-color: var(--akzent-stark);
+  color: var(--auf-akzent);
+}
+
+.schalter {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  border: 1px solid var(--rand-2);
+  background: var(--flaeche-eingabe);
+  border-radius: 10px;
+  cursor: pointer;
+  flex: none;
+}
+
+.schalter::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-3);
+  transition: left var(--schnell);
+}
+
+.schalter.an {
+  background: var(--akzent);
+  border-color: var(--akzent-stark);
+}
+
+.schalter.an::after {
+  left: 18px;
+  background: var(--auf-akzent);
+}
+
+/* ----- Abzeichen und Status-Punkte ---------------------------------------- */
+
+.abzeichen {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--a1);
+  padding: 1px 7px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border: 1px solid var(--rand-2);
+  border-radius: var(--radius-eingabe);
+  background: var(--flaeche-panel-2);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+
+.abzeichen.gut {
+  background: var(--zustand-erfolg-weich);
+  color: var(--zustand-erfolg);
+  border-color: var(--zustand-erfolg);
+}
+
+.abzeichen.warnung {
+  background: var(--zustand-warnung-weich);
+  color: var(--zustand-warnung);
+  border-color: var(--zustand-warnung);
+}
+
+.abzeichen.fehler {
+  background: var(--zustand-fehler-weich);
+  color: var(--zustand-fehler);
+  border-color: var(--zustand-fehler);
+}
+
+.abzeichen.info {
+  background: var(--zustand-info-weich);
+  color: var(--zustand-info);
+  border-color: var(--zustand-info);
+}
+
+.status-punkt {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--zustand-erfolg);
+  flex: none;
+}
+
+.status-punkt.aus {
+  background: var(--zustand-fehler);
+}
+
+/* ----- Karten und Panels -------------------------------------------------- */
+
+.karte {
+  background: var(--flaeche-panel);
+  border: 1px solid var(--rand-1);
+  border-radius: var(--radius-panel);
+}
+
+.karte-kopf {
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+  padding: var(--a3) var(--a4);
+  border-bottom: 1px solid var(--rand-1);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.karte-kopf i {
+  color: var(--akzent);
+}
+
+.karte-inhalt {
+  padding: var(--a4);
+}
+
+/* ----- Kennzahlen (Status/Statistik) -------------------------------------- */
+
+.kennzahl-raster {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--a3);
+}
+
+.kennzahl {
+  background: var(--flaeche-panel-2);
+  border: 1px solid var(--rand-1);
+  padding: var(--a3);
+}
+
+.kennzahl .kz-wert {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-family: var(--schrift-mono);
+}
+
+.kennzahl .kz-name {
+  font-size: 0.78rem;
+  color: var(--text-3);
+  margin-top: var(--a1);
+}
+
+/* ----- Einstellungen ------------------------------------------------------ */
+
+.einst-gruppe {
+  margin-bottom: var(--a4);
+}
+
+.einst-gruppe h3 {
+  margin: 0 0 var(--a2);
+  font-size: 0.95rem;
+}
+
+.einst-zeile {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: var(--a2) 0;
+  border-bottom: 1px solid var(--rand-1);
+  font-size: 0.88rem;
+}
+
+.einst-zeile .einst-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.einst-zeile .einst-text span {
+  font-size: 0.76rem;
+  color: var(--text-3);
+}
+
+.einst-zeile .einst-steuer {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--a2);
+}
+
+/* ----- Tabelle ------------------------------------------------------------ */
+
+.tabelle {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.86rem;
+}
+
+.tabelle th {
+  background: var(--flaeche-panel-2);
+  border-bottom: 1px solid var(--rand-2);
+  padding: var(--a2) var(--a3);
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.tabelle td {
+  padding: 5px var(--a3);
+  border-bottom: 1px solid var(--rand-1);
+}
+
+.tabelle tbody tr:hover {
+  background: var(--akzent-weich);
+}
+
+/* ----- Leerer Zustand und Kleinkram --------------------------------------- */
+
+.leer-zustand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--a3);
+  color: var(--text-3);
+  padding: var(--a6);
+  text-align: center;
+}
+
+.leer-zustand i {
+  font-size: 2.6rem;
+  color: var(--rand-2);
+}
+
+.hinweis-text {
+  font-size: 0.82rem;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+
+.spinner {
+  display: inline-block;
+  animation: dreh 0.9s linear infinite;
+}
+
+@keyframes dreh {
+  to {
+    transform: rotate(360deg);
+  }
+}
