@@ -260,7 +260,11 @@
   function baueHost() {
     if (shadowHost) return
     shadowHost = document.createElement('div')
-    shadowHost.style.cssText = 'all:initial; position:fixed; z-index:2147483646; pointer-events:none;'
+    // top/left/size MUESSEN gesetzt sein: ein position:fixed-Element ohne top/left
+    // sitzt an seiner statischen Position (weit unten bei langen Seiten), wodurch
+    // die absolut positionierten Overlays ausserhalb des Sichtbereichs landen.
+    shadowHost.style.cssText =
+      'all:initial; position:fixed; top:0; left:0; width:0; height:0; z-index:2147483646; pointer-events:none;'
     schatten = shadowHost.attachShadow({ mode: 'open' })
     schatten.innerHTML = `
       <style>
