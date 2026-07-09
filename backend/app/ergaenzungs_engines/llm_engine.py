@@ -14,6 +14,7 @@ from collections.abc import AsyncIterator
 from typing import ClassVar
 
 from app import config
+from app.lernen import tokens
 from app.modelle.ergaenzung import ErgaenzungsAnfrage, ErgaenzungsModus, Vorschlag
 from app.registry import ergaenzungs_engine
 from app.services import llm_client
@@ -97,6 +98,8 @@ class LlmEngine:
 
     async def ergaenze(self, anfrage: ErgaenzungsAnfrage, kontext: str | None) -> list[Vorschlag]:
         """Einmalige (nicht streamende) Ergänzung - für den Zwei-Ruf-Fallback."""
+        if tokens.letztes_teilwort(anfrage.text_vor):
+            return []  # mitten im Wort: der Trie (echte Wortlisten) ist zustaendig
         try:
             roh = await llm_client.chat(
                 _nachrichten(anfrage, kontext),
@@ -111,6 +114,8 @@ class LlmEngine:
 
     async def stream(self, anfrage: ErgaenzungsAnfrage, kontext: str | None) -> AsyncIterator[str]:
         """Liefert die Text-Deltas der Ergänzung (für den SSE-Pfad)."""
+        if tokens.letztes_teilwort(anfrage.text_vor):
+            return  # mitten im Wort: kein LLM (der Trie vervollstaendigt das Wort)
         async for delta in llm_client.chat_stream(
             _nachrichten(anfrage, kontext),
             temperature=0.2,

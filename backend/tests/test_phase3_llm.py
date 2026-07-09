@@ -29,6 +29,18 @@ def test_nachbereiten_normalisiert_abstaende():
     assert nachbereiten(nach_leer, " Morgen").text == "Morgen"
 
 
+async def test_llm_engine_ueberspringt_mitten_im_wort(monkeypatch):
+    async def fake_chat(*args, **kwargs):
+        raise AssertionError("LLM darf mitten im Wort nicht aufgerufen werden - der Trie ist zustaendig")
+
+    monkeypatch.setattr(llm_client, "chat", fake_chat)
+    # 'Deutsc' endet mitten im Wort -> LLM ueberspringt, keine (halluzinierte) Ergaenzung.
+    res = await LlmEngine().ergaenze(
+        ErgaenzungsAnfrage(text_vor="Deutsc", modus=ErgaenzungsModus.PHRASE), None
+    )
+    assert res == []
+
+
 async def test_llm_engine_einmalig(monkeypatch):
     async def fake_chat(*args, **kwargs):
         return "guten Tag"
