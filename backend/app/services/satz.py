@@ -13,6 +13,7 @@ import json
 import re
 
 from app import config
+from app.lernen import umlaut
 from app.profile import dienst as profil_dienst
 from app.services import llm_client
 
@@ -70,7 +71,7 @@ async def vorschlaege(satz: str, *, profil_id: str | None = None, modell: str | 
 
     ergebnis: list[str] = []
     for kandidat in _parse(roh):
-        kandidat = _THINK_RE.sub("", kandidat).strip().strip('"')
+        kandidat = umlaut.repariere(_THINK_RE.sub("", kandidat).strip().strip('"'))
         if not kandidat or kandidat == satz or kandidat in ergebnis:
             continue
         ergebnis.append(kandidat)

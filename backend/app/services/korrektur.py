@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import re
 
+from app.lernen import umlaut
 from app.modelle.pruefung import KorrekturAntwort
 from app.services import llm_client
 
@@ -88,6 +89,7 @@ async def korrigiere(text: str, *, modell: str | None = None) -> KorrekturAntwor
     if _zu_stark_abweichend(original, korrigiert):
         return KorrekturAntwort(original=original, korrigiert=original, engine="llm", veraendert=False)
 
+    korrigiert = umlaut.repariere(korrigiert)  # Sicherheitsnetz gegen ASCII-Umlaute des Modells
     return KorrekturAntwort(
         original=original,
         korrigiert=korrigiert,

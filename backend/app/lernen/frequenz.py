@@ -27,8 +27,20 @@ def _index() -> tuple[list[str], dict[str, int]]:
             if not zahl.isdigit() or len(wort) < 2:
                 continue
             freq[wort.lower()] = int(zahl)
+    _entferne_ascii_dubletten(freq)
     woerter = sorted(freq)
     return woerter, freq
+
+
+def _entferne_ascii_dubletten(freq: dict[str, int]) -> None:
+    """Entfernt ASCII-Umlaut-Varianten, wenn die echte Umlaut-Form vorhanden ist
+    (z. B. 'fuer' neben 'für'). So schlaegt der Trie nie ae/oe/ue vor. 'ss'->'ß'
+    wird bewusst ausgelassen (zu heikel: 'dass'/'Adresse')."""
+    for wort in list(freq):
+        if "ae" in wort or "oe" in wort or "ue" in wort:
+            kandidat = wort.replace("ae", "ä").replace("oe", "ö").replace("ue", "ü")
+            if kandidat != wort and kandidat in freq:
+                del freq[wort]
 
 
 def verfuegbar() -> bool:

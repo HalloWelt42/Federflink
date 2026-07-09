@@ -14,7 +14,7 @@ from collections.abc import AsyncIterator
 from typing import ClassVar
 
 from app import config
-from app.lernen import tokens
+from app.lernen import tokens, umlaut
 from app.modelle.ergaenzung import ErgaenzungsAnfrage, ErgaenzungsModus, Vorschlag
 from app.registry import ergaenzungs_engine
 from app.services import llm_client
@@ -76,6 +76,7 @@ def nachbereiten(anfrage: ErgaenzungsAnfrage, roh: str) -> Vorschlag | None:
 
     if not text:
         return None
+    text = umlaut.repariere(text)  # Sicherheitsnetz gegen ASCII-Umlaute des Modells
     return Vorschlag(
         id=uuid.uuid4().hex,
         text=text,
