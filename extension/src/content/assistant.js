@@ -183,6 +183,49 @@
     return istBearbeitbar(el) && !istSensibel(el)
   }
 
+  // Textknoten, die zu Platzhaltern/Dekoration gehoeren (Discord/Slate rendert den
+  // Platzhalter als echtes DOM-Element) - die duerfen nicht als Inhalt zaehlen.
+  function istDekoKnoten(wurzel, node) {
+    let el = node.parentElement
+    while (el && el !== wurzel) {
+      if (
+        el.hasAttribute('data-placeholder') ||
+        el.hasAttribute('data-slate-placeholder') ||
+        el.getAttribute('aria-hidden') === 'true' ||
+        el.getAttribute('contenteditable') === 'false'
+      ) {
+        return true
+      }
+      el = el.parentElement
+    }
+    return false
+  }
+
+  // Sammelt den echten Editortext vor dem Cursor und gesamt (ohne Platzhalter).
+  function sammleEditorKontext(wurzel, bereich) {
+    const walker = document.createTreeWalker(wurzel, NodeFilter.SHOW_TEXT)
+    let vor = ''
+    let gesamt = ''
+    let n
+    while ((n = walker.nextNode())) {
+      if (istDekoKnoten(wurzel, n)) continue
+      const t = n.textContent || ''
+      gesamt += t
+      let cpEnde
+      try {
+        cpEnde = bereich.comparePoint(n, t.length)
+      } catch {
+        cpEnde = 1
+      }
+      if (cpEnde <= 0) {
+        vor += t // ganzer Knoten liegt vor dem Cursor
+      } else if (n === bereich.endContainer) {
+        vor += t.slice(0, bereich.endOffset) // Cursor liegt in diesem Knoten
+      }
+    }
+    return { vor, gesamt }
+  }
+
   // ----- Kontext am Cursor holen -----------------------------------------
   function kontext() {
     if (!feld) return null
@@ -202,11 +245,8 @@
     const auswahl = window.getSelection()
     if (!auswahl || auswahl.rangeCount === 0) return null
     const bereich = auswahl.getRangeAt(0)
-    const vorBereich = bereich.cloneRange()
-    vorBereich.selectNodeContents(feld)
-    vorBereich.setEnd(bereich.endContainer, bereich.endOffset)
-    const vor = vorBereich.toString()
-    const gesamt = feld.textContent || ''
+    if (!feld.contains(bereich.endContainer)) return null
+    const { vor, gesamt } = sammleEditorKontext(feld, bereich)
     return {
       vor,
       nach: gesamt.slice(vor.length),
