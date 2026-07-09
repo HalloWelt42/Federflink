@@ -7,7 +7,31 @@
  * Das Netzwerk läuft hier, weil Content-Skript-Anfragen der Seiten-CORS
  * unterliegen würden - der Worker-Ursprung wird vom Server erlaubt.
  */
-importScripts(chrome.runtime.getURL('shared/defaults.js'))
+// Gemeinsame Standardwerte laden. importScripts mit chrome.runtime.getURL kann in
+// MV3 scheitern - dann wuerde der Worker sterben und nie Nachrichten verarbeiten.
+// Daher robust: relativer Pfad + Notfall-Inline-Standardwerte.
+try {
+  importScripts('/shared/defaults.js')
+} catch (e) {
+  console.error('[Federflink] defaults.js nicht geladen:', e)
+}
+if (!self.FEDERFLINK_DEFAULTS) {
+  self.FEDERFLINK_DEFAULTS = {
+    aktiv: true,
+    serverUrl: 'http://localhost:8500',
+    profilStandard: 'standard',
+    modus: 'phrase',
+    minZeichen: 3,
+    debounceMs: 180,
+    anzeigeModus: 'auto',
+    proSeite: {},
+  }
+  self.ffMerge = (g) => Object.assign({}, self.FEDERFLINK_DEFAULTS, g || {})
+  self.ffLadeOptionen = () =>
+    new Promise((r) => chrome.storage.sync.get('optionen', (d) => r(self.ffMerge(d && d.optionen))))
+  self.ffSpeichereOptionen = (o) => new Promise((r) => chrome.storage.sync.set({ optionen: o }, r))
+}
+console.log('[Federflink] Service-Worker geladen (Server:', self.FEDERFLINK_DEFAULTS.serverUrl, ')')
 
 // ----- Vervollständigung streamen (pro Port ein Abbruch-Controller) -----
 const abbruch = new WeakMap()
@@ -43,6 +67,7 @@ async function streameVervollstaendigung(port, nachricht, signal) {
       signal,
     })
     if (!antwort.ok || !antwort.body) {
+      console.warn('[Federflink] Server antwortete mit HTTP', antwort.status)
       sicherSenden(port, { typ: 'fehler', id, meldung: `HTTP ${antwort.status}` })
       return
     }
@@ -63,6 +88,7 @@ async function streameVervollstaendigung(port, nachricht, signal) {
     sicherSenden(port, { typ: 'done', id })
   } catch (e) {
     if (e && e.name === 'AbortError') return
+    console.warn('[Federflink] Server nicht erreichbar (', serverUrl, '):', String(e))
     sicherSenden(port, { typ: 'fehler', id, meldung: String(e) })
   }
 }

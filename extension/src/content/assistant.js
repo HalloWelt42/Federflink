@@ -15,8 +15,36 @@
   const NS = '__FEDERFLINK__'
   const HOST = location.hostname
 
+  // Diagnose: Logs im Seiten-Konsolenfenster. Zum Stummschalten auf false setzen.
+  const DEBUG = true
+  const flog = (...a) => {
+    if (DEBUG) console.log('%c[Federflink]', 'color:#2f6154;font-weight:bold', ...a)
+  }
+
+  // Notfall-Standardwerte, falls shared/defaults.js nicht (rechtzeitig) geladen wurde.
+  if (!self.FEDERFLINK_DEFAULTS) {
+    console.error('[Federflink] defaults.js nicht geladen - Notfall-Standardwerte aktiv')
+    self.FEDERFLINK_DEFAULTS = {
+      aktiv: true,
+      serverUrl: 'http://localhost:8500',
+      profilStandard: 'standard',
+      modus: 'phrase',
+      minZeichen: 3,
+      debounceMs: 180,
+      anzeigeModus: 'auto',
+      proSeite: {},
+    }
+    self.ffMerge = (g) => Object.assign({}, self.FEDERFLINK_DEFAULTS, g || {})
+    self.ffSeite = (opt, host) => {
+      const e = (opt.proSeite && opt.proSeite[host]) || {}
+      return { aktiv: e.aktiv !== false, profil: e.profil || opt.profilStandard, lernen: e.lernen === true }
+    }
+    self.ffLadeOptionen = () => Promise.resolve(self.ffMerge())
+  }
+
   let optionen = self.FEDERFLINK_DEFAULTS
   let seite = { aktiv: true, profil: 'standard', lernen: false }
+  flog('Content-Skript aktiv auf', HOST, '- Server:', optionen.serverUrl)
 
   let feld = null // aktuelles bearbeitbares Feld
   let anfrageNr = 0 // monoton, gegen veraltete Antworten
@@ -53,9 +81,14 @@
   }
 
   function behandleFrame(frame) {
+    if (frame.typ === 'fehler') {
+      flog('Server-Fehler:', frame.meldung, '- laeuft der Server auf', optionen.serverUrl, '?')
+      return
+    }
     if (frame.id !== anfrageNr) return // veraltete Antwort verwerfen
     if (frame.typ === 'instant') {
       const vs = frame.vorschlaege || []
+      flog('Instant-Antwort:', vs.length, 'Vorschlag/Vorschlaege', vs[0] ? `("${vs[0].text}")` : '')
       aktiverVorschlag = vs[0] || null
       alternativen = vs.slice(1)
       rendern()
@@ -144,9 +177,13 @@
   }
 
   function anfordern() {
-    if (!feld || !istGlobalAktiv() || !eignet(feld)) return
+    if (!feld || !istGlobalAktiv() || !eignet(feld)) {
+      flog('keine Anfrage - Feld:', !!feld, 'global aktiv:', istGlobalAktiv())
+      return
+    }
     const k = kontext()
     if (!k || k.vor.trim().length < optionen.minZeichen) {
+      flog('keine Anfrage - zu wenig Text (', k ? k.vor.trim().length : 0, 'von', optionen.minZeichen, ')')
       verstecken()
       return
     }
@@ -162,6 +199,7 @@
       max_vorschlaege: 3,
       seite: { host: HOST, feld_art: k.feldArt, sprach_hinweis: 'de' },
     }
+    flog('Anfrage', anfrageNr, 'gesendet, Kontext endet mit:', JSON.stringify(k.vor.slice(-25)))
     holePort().postMessage({ typ: 'complete', id: anfrageNr, anfrage, serverUrl: optionen.serverUrl })
   }
 
@@ -189,13 +227,19 @@
     document.documentElement.appendChild(shadowHost)
   }
 
-  function verstecken() {
-    aktiverVorschlag = null
-    alternativen = []
+  // Nur die Overlay-Elemente aus dem Schatten-DOM entfernen (Zustand bleibt).
+  function overlayLeeren() {
     if (schatten) {
       const alt = schatten.querySelectorAll('.spiegel, .pille')
       alt.forEach((n) => n.remove())
     }
+  }
+
+  // Vorschau ganz verwerfen: DOM leeren UND den Zustand zuruecksetzen.
+  function verstecken() {
+    aktiverVorschlag = null
+    alternativen = []
+    overlayLeeren()
   }
 
   const STIL_FELDER = [
@@ -206,7 +250,7 @@
   ]
 
   function rendern() {
-    verstecken()
+    overlayLeeren() // nur alte Overlay-Elemente entfernen, Vorschlag NICHT loeschen
     if (!feld || !aktiverVorschlag) return
     const ghost = aktiverVorschlag.text
     if (!ghost) return
@@ -218,7 +262,8 @@
       (feld.tagName === 'INPUT' || feld.tagName === 'TEXTAREA') &&
       k.amEnde &&
       optionen.anzeigeModus !== 'pille'
-    if (inline && optionen.anzeigeModus !== 'pille') {
+    flog('rendern:', inline ? 'inline-Geistertext' : 'Pille', '->', JSON.stringify(ghost))
+    if (inline) {
       zeigeInline(ghost, k)
     } else {
       zeigePille(ghost, k)
@@ -417,6 +462,7 @@
     const ziel = e.composedPath ? e.composedPath()[0] : e.target
     if (eignet(ziel)) {
       feld = ziel
+      flog('Feld im Fokus:', ziel.tagName, ziel.type || (ziel.isContentEditable ? 'contenteditable' : ''))
       injiziereMain()
     } else {
       feld = null

@@ -1,7 +1,7 @@
 {
   "name": "federflink-frontend",
   "private": true,
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Steuer-Oberfläche von Federflink (Svelte 5 + TypeScript + Vite)",
   "type": "module",
   "scripts": {
