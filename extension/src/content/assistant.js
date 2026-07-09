@@ -34,7 +34,12 @@
         'max-width:340px; opacity:.94; pointer-events:none; white-space:normal;'
       ;(document.body || document.documentElement).appendChild(statusEl)
     }
-    const v = (chrome.runtime.getManifest && chrome.runtime.getManifest().version) || '?'
+    let v = '?'
+    try {
+      v = (chrome.runtime.getManifest && chrome.runtime.getManifest().version) || '?'
+    } catch {
+      /* Kontext ungueltig */
+    }
     statusEl.style.color = fehlerhaft ? '#ff9a8a' : '#9be6c8'
     statusEl.textContent = `Federflink ${v} · ${text}`
   }
@@ -72,18 +77,32 @@
   let entprellungs = null
   let mainInjiziert = false
 
-  // ----- Optionen laden und aktuell halten -------------------------------
-  self.ffLadeOptionen().then((o) => {
-    optionen = o
-    seite = self.ffSeite(o, HOST)
-  })
-  chrome.storage.onChanged.addListener((aenderungen, bereich) => {
-    if (bereich === 'sync' && aenderungen.optionen) {
-      optionen = self.ffMerge(aenderungen.optionen.newValue)
-      seite = self.ffSeite(optionen, HOST)
-      if (!istGlobalAktiv()) verstecken()
+  // True, solange die Erweiterung nicht neu geladen wurde (sonst ist chrome.runtime.id weg).
+  const kontextOk = () => {
+    try {
+      return !!(chrome.runtime && chrome.runtime.id)
+    } catch {
+      return false
     }
-  })
+  }
+
+  // ----- Optionen laden und aktuell halten -------------------------------
+  try {
+    self.ffLadeOptionen().then((o) => {
+      optionen = o
+      seite = self.ffSeite(o, HOST)
+    })
+    chrome.storage.onChanged.addListener((aenderungen, bereich) => {
+      if (bereich === 'sync' && aenderungen.optionen) {
+        optionen = self.ffMerge(aenderungen.optionen.newValue)
+        seite = self.ffSeite(optionen, HOST)
+        if (!istGlobalAktiv()) verstecken()
+      }
+    })
+  } catch {
+    // "Extension context invalidated": altes Content-Skript nach Reload der Erweiterung.
+    setzeStatus('Erweiterung wurde neu geladen - bitte diese Seite aktualisieren (F5)', true)
+  }
 
   const istGlobalAktiv = () => optionen.aktiv && seite.aktiv
 
@@ -91,12 +110,17 @@
   let port = null
   function holePort() {
     if (port) return port
-    port = chrome.runtime.connect({ name: 'federflink' })
-    port.onMessage.addListener(behandleFrame)
-    port.onDisconnect.addListener(() => {
-      port = null
-    })
-    return port
+    if (!kontextOk()) return null
+    try {
+      port = chrome.runtime.connect({ name: 'federflink' })
+      port.onMessage.addListener(behandleFrame)
+      port.onDisconnect.addListener(() => {
+        port = null
+      })
+      return port
+    } catch {
+      return null
+    }
   }
 
   function behandleFrame(frame) {
@@ -220,9 +244,14 @@
       max_vorschlaege: 3,
       seite: { host: HOST, feld_art: k.feldArt, sprach_hinweis: 'de' },
     }
+    const p = holePort()
+    if (!p) {
+      setzeStatus('Erweiterung wurde neu geladen - bitte diese Seite aktualisieren (F5)', true)
+      return
+    }
     flog('Anfrage', anfrageNr, 'gesendet, Kontext endet mit:', JSON.stringify(k.vor.slice(-25)))
     setzeStatus('Anfrage ' + anfrageNr + ' an Server gesendet …')
-    holePort().postMessage({ typ: 'complete', id: anfrageNr, anfrage, serverUrl: optionen.serverUrl })
+    p.postMessage({ typ: 'complete', id: anfrageNr, anfrage, serverUrl: optionen.serverUrl })
   }
 
   // ----- Overlay: Shadow-Host --------------------------------------------
@@ -447,7 +476,9 @@
   }
 
   function lerne(vorschlag, k) {
-    holePort().postMessage({
+    const p = holePort()
+    if (!p) return
+    p.postMessage({
       typ: 'lerne',
       serverUrl: optionen.serverUrl,
       signal: {
