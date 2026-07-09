@@ -21,6 +21,24 @@
     if (DEBUG) console.log('%c[Federflink]', 'color:#2f6154;font-weight:bold', ...a)
   }
 
+  // Sichtbare Statusanzeige oben rechts (nur bei DEBUG) - zeigt live, was passiert.
+  let statusEl = null
+  function setzeStatus(text, fehlerhaft) {
+    if (!DEBUG) return
+    if (!statusEl) {
+      statusEl = document.createElement('div')
+      statusEl.style.cssText =
+        'all:initial; position:fixed; top:8px; right:8px; z-index:2147483647;' +
+        'font:12px/1.4 system-ui,-apple-system,sans-serif; background:#1f2624;' +
+        'padding:6px 10px; border-radius:6px; box-shadow:0 2px 10px rgba(0,0,0,.45);' +
+        'max-width:340px; opacity:.94; pointer-events:none; white-space:normal;'
+      ;(document.body || document.documentElement).appendChild(statusEl)
+    }
+    const v = (chrome.runtime.getManifest && chrome.runtime.getManifest().version) || '?'
+    statusEl.style.color = fehlerhaft ? '#ff9a8a' : '#9be6c8'
+    statusEl.textContent = `Federflink ${v} · ${text}`
+  }
+
   // Notfall-Standardwerte, falls shared/defaults.js nicht (rechtzeitig) geladen wurde.
   if (!self.FEDERFLINK_DEFAULTS) {
     console.error('[Federflink] defaults.js nicht geladen - Notfall-Standardwerte aktiv')
@@ -45,6 +63,7 @@
   let optionen = self.FEDERFLINK_DEFAULTS
   let seite = { aktiv: true, profil: 'standard', lernen: false }
   flog('Content-Skript aktiv auf', HOST, '- Server:', optionen.serverUrl)
+  setzeStatus('geladen auf ' + HOST + ' - jetzt in ein Textfeld klicken')
 
   let feld = null // aktuelles bearbeitbares Feld
   let anfrageNr = 0 // monoton, gegen veraltete Antworten
@@ -83,12 +102,14 @@
   function behandleFrame(frame) {
     if (frame.typ === 'fehler') {
       flog('Server-Fehler:', frame.meldung, '- laeuft der Server auf', optionen.serverUrl, '?')
+      setzeStatus('Server nicht erreichbar unter ' + optionen.serverUrl + ' (' + frame.meldung + ')', true)
       return
     }
     if (frame.id !== anfrageNr) return // veraltete Antwort verwerfen
     if (frame.typ === 'instant') {
       const vs = frame.vorschlaege || []
       flog('Instant-Antwort:', vs.length, 'Vorschlag/Vorschlaege', vs[0] ? `("${vs[0].text}")` : '')
+      setzeStatus(vs.length + ' Vorschlag(e)' + (vs[0] ? ': "' + vs[0].text + '"' : ' (nichts fuer diesen Text)'))
       aktiverVorschlag = vs[0] || null
       alternativen = vs.slice(1)
       rendern()
@@ -200,6 +221,7 @@
       seite: { host: HOST, feld_art: k.feldArt, sprach_hinweis: 'de' },
     }
     flog('Anfrage', anfrageNr, 'gesendet, Kontext endet mit:', JSON.stringify(k.vor.slice(-25)))
+    setzeStatus('Anfrage ' + anfrageNr + ' an Server gesendet …')
     holePort().postMessage({ typ: 'complete', id: anfrageNr, anfrage, serverUrl: optionen.serverUrl })
   }
 
@@ -262,6 +284,7 @@
       k.amEnde &&
       optionen.anzeigeModus !== 'pille'
     flog('rendern:', inline ? 'inline-Geistertext (Spiegel)' : 'Geistertext am Cursor', '->', JSON.stringify(ghost))
+    setzeStatus('Geistertext gezeigt (' + (inline ? 'inline' : 'am Cursor') + '): "' + ghost + '" - Tab uebernimmt')
     if (inline) {
       zeigeInline(ghost, k)
     } else {
@@ -355,20 +378,21 @@
       document.body.removeChild(mess)
       return { x, y, h }
     }
-    // contenteditable: Cursor-Rechteck aus der Selektion.
+    // contenteditable: Cursor-Rechteck aus der Selektion (ohne den Editor-DOM zu aendern).
     const auswahl = window.getSelection()
     if (auswahl && auswahl.rangeCount) {
-      const bereich = auswahl.getRangeAt(0).cloneRange()
+      const bereich = auswahl.getRangeAt(0)
       let r = bereich.getBoundingClientRect()
-      if (!r.height && !r.top && !r.left) {
-        // Leerer/zusammengefallener Bereich: Nullbreiten-Marke einsetzen und messen.
-        const marke = document.createElement('span')
-        marke.textContent = '​'
-        bereich.insertNode(marke)
-        r = marke.getBoundingClientRect()
-        marke.remove()
+      if (!r.width && !r.height && !r.top && !r.left) {
+        const rects = bereich.getClientRects()
+        if (rects && rects.length) r = rects[rects.length - 1]
       }
-      if (r.height || r.top || r.left) {
+      if (r && !r.height && !r.top && !r.left) {
+        const knoten = bereich.startContainer
+        const eln = knoten.nodeType === 1 ? knoten : knoten.parentElement
+        if (eln) r = eln.getBoundingClientRect()
+      }
+      if (r && (r.height || r.top || r.left)) {
         return { x: r.right || r.left, y: r.top, h: r.height || 18 }
       }
     }
@@ -482,6 +506,7 @@
     if (eignet(ziel)) {
       feld = ziel
       flog('Feld im Fokus:', feld.tagName, feld.type || (feld.isContentEditable ? 'contenteditable' : ''))
+      setzeStatus('Feld erkannt: ' + feld.tagName + (feld.isContentEditable ? ' (contenteditable)' : '') + ' - jetzt tippen')
       injiziereMain()
     } else {
       feld = null
