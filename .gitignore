@@ -32,3 +32,5 @@ extension/*.zip
 # Betriebssystem / Editor
 .DS_Store
 *.swp
+.idea/
+.vscode/
