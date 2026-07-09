@@ -269,8 +269,10 @@
     schatten.innerHTML = `
       <style>
         .spiegel{ position:absolute; overflow:hidden; box-sizing:border-box; color:transparent;
-          background:transparent; pointer-events:none; }
-        .spiegel .inner{ position:absolute; top:0; left:0; }
+          background:transparent; pointer-events:none; margin:0; }
+        /* im normalen Fluss (nicht absolut), damit der Text nach dem Padding beginnt
+           wie im echten Feld; das translate gleicht nur den Scroll aus. */
+        .spiegel .inner{ position:relative; margin:0; }
         .geist{ color: rgba(120,120,120,0.85); }
         .geist-frei{ position:absolute; pointer-events:none; white-space:pre;
           display:flex; align-items:center; gap:4px; overflow:hidden; }
@@ -296,11 +298,14 @@
     overlayLeeren()
   }
 
+  // Text-/Boxmetriken des Feldes, die der Spiegel exakt uebernehmen muss.
+  // boxSizing bewusst NICHT dabei: der Spiegel bleibt border-box (siehe CSS),
+  // sonst verschoebe sich die Ausrichtung je nach Feld.
   const STIL_FELDER = [
     'fontFamily', 'fontSize', 'fontWeight', 'fontStyle', 'fontVariant', 'letterSpacing',
     'wordSpacing', 'lineHeight', 'textTransform', 'textIndent', 'textAlign', 'tabSize',
     'paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft', 'borderTopWidth',
-    'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'boxSizing', 'direction',
+    'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth', 'direction',
   ]
 
   function rendern() {
@@ -396,7 +401,10 @@
       st.visibility = 'hidden'
       st.whiteSpace = feld.tagName === 'TEXTAREA' ? 'pre-wrap' : 'pre'
       st.overflowWrap = 'break-word'
-      st.width = feld.clientWidth + 'px'
+      st.boxSizing = 'border-box'
+      st.borderStyle = 'solid'
+      st.borderColor = 'transparent'
+      st.width = rect.width + 'px'
       STIL_FELDER.forEach((f) => (st[f] = stil[f]))
       mess.textContent = k.vor
       const marke = document.createElement('span')
