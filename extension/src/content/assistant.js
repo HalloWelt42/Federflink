@@ -217,12 +217,11 @@
           background:transparent; pointer-events:none; }
         .spiegel .inner{ position:absolute; top:0; left:0; }
         .geist{ color: rgba(120,120,120,0.85); }
-        .pille{ position:absolute; pointer-events:auto; background:#2f6154; color:#f2f6f4;
-          font:13px/1.4 system-ui,-apple-system,sans-serif; padding:4px 8px; border-radius:4px;
-          box-shadow:0 4px 14px rgba(0,0,0,0.3); max-width:360px; white-space:pre-wrap;
-          cursor:pointer; display:flex; gap:8px; align-items:center; }
-        .pille .taste{ font-size:11px; opacity:0.85; border:1px solid rgba(255,255,255,0.5);
-          border-radius:3px; padding:0 4px; }
+        .geist-frei{ position:absolute; pointer-events:none; white-space:pre;
+          display:flex; align-items:center; gap:4px; overflow:hidden; }
+        .geist-frei .geist{ color: rgba(155,155,155,0.95); }
+        .geist-frei .taste{ color: rgba(155,155,155,0.65); font-size:0.72em; line-height:1.2;
+          border:1px solid rgba(155,155,155,0.45); border-radius:3px; padding:0 3px; }
       </style>`
     document.documentElement.appendChild(shadowHost)
   }
@@ -230,7 +229,7 @@
   // Nur die Overlay-Elemente aus dem Schatten-DOM entfernen (Zustand bleibt).
   function overlayLeeren() {
     if (schatten) {
-      const alt = schatten.querySelectorAll('.spiegel, .pille')
+      const alt = schatten.querySelectorAll('.spiegel, .geist-frei')
       alt.forEach((n) => n.remove())
     }
   }
@@ -262,11 +261,11 @@
       (feld.tagName === 'INPUT' || feld.tagName === 'TEXTAREA') &&
       k.amEnde &&
       optionen.anzeigeModus !== 'pille'
-    flog('rendern:', inline ? 'inline-Geistertext' : 'Pille', '->', JSON.stringify(ghost))
+    flog('rendern:', inline ? 'inline-Geistertext (Spiegel)' : 'Geistertext am Cursor', '->', JSON.stringify(ghost))
     if (inline) {
       zeigeInline(ghost, k)
     } else {
-      zeigePille(ghost, k)
+      zeigeGeistAmCursor(ghost, k)
     }
   }
 
@@ -302,33 +301,36 @@
     schatten.appendChild(spiegel)
   }
 
-  function zeigePille(ghost, k) {
-    const koord = caretKoordinaten(k)
-    const pille = document.createElement('div')
-    pille.className = 'pille'
-    const txt = document.createElement('span')
-    txt.textContent = ghost.length > 80 ? ghost.slice(0, 80) + '…' : ghost
-    const taste = document.createElement('span')
-    taste.className = 'taste'
-    taste.textContent = 'Tab'
-    pille.appendChild(txt)
-    pille.appendChild(taste)
-    pille.addEventListener('mousedown', (e) => {
-      e.preventDefault()
-      uebernehmen(aktiverVorschlag)
-    })
-    // Position mit Viewport-Begrenzung.
-    let x = koord.x
-    let y = koord.y + 20
-    if (x + 370 > window.innerWidth) x = Math.max(8, window.innerWidth - 370)
-    if (y + 40 > window.innerHeight) y = koord.y - 34
-    pille.style.left = x + 'px'
-    pille.style.top = y + 'px'
-    schatten.appendChild(pille)
+  // Grauer Geistertext direkt am Cursor (contenteditable und mid-line-Faelle).
+  // Sitzt auf der Cursor-Zeile - dadurch kein Problem, wenn das Feld am unteren
+  // Bildrand liegt (Discord/Twitch). Beruehrt den Editor-DOM nicht.
+  function zeigeGeistAmCursor(ghost, k) {
+    const m = caretMetrik(k)
+    const stil = getComputedStyle(feld)
+    const el = document.createElement('div')
+    el.className = 'geist-frei'
+    el.style.left = m.x + 'px'
+    el.style.top = m.y + 'px'
+    el.style.height = m.h + 'px'
+    el.style.lineHeight = m.h + 'px'
+    el.style.fontFamily = stil.fontFamily
+    el.style.fontSize = stil.fontSize
+    el.style.fontWeight = stil.fontWeight
+    el.style.maxWidth = Math.max(60, window.innerWidth - m.x - 8) + 'px'
+
+    const t = document.createElement('span')
+    t.className = 'geist'
+    t.textContent = ghost
+    const hint = document.createElement('span')
+    hint.className = 'taste'
+    hint.textContent = '⇥'
+    el.appendChild(t)
+    el.appendChild(hint)
+    schatten.appendChild(el)
   }
 
-  // Cursorkoordinaten (Viewport) für die Pille.
-  function caretKoordinaten(k) {
+  // Cursor-Metrik (Viewport): x/y der Cursor-Oberkante + Zeilenhoehe h.
+  function caretMetrik(k) {
     if (feld.tagName === 'INPUT' || feld.tagName === 'TEXTAREA') {
       const rect = feld.getBoundingClientRect()
       const stil = getComputedStyle(feld)
@@ -349,21 +351,29 @@
       const brect = mess.getBoundingClientRect()
       const x = rect.left + (mrect.left - brect.left) - feld.scrollLeft
       const y = rect.top + (mrect.top - brect.top) - feld.scrollTop
+      const h = mrect.height || parseFloat(stil.lineHeight) || parseFloat(stil.fontSize) * 1.3
       document.body.removeChild(mess)
-      return { x, y }
+      return { x, y, h }
     }
-    // contenteditable
+    // contenteditable: Cursor-Rechteck aus der Selektion.
     const auswahl = window.getSelection()
     if (auswahl && auswahl.rangeCount) {
-      let r = auswahl.getRangeAt(0).getBoundingClientRect()
-      if (r.x === 0 && r.y === 0) {
-        const b = feld.getBoundingClientRect()
-        return { x: b.left, y: b.top }
+      const bereich = auswahl.getRangeAt(0).cloneRange()
+      let r = bereich.getBoundingClientRect()
+      if (!r.height && !r.top && !r.left) {
+        // Leerer/zusammengefallener Bereich: Nullbreiten-Marke einsetzen und messen.
+        const marke = document.createElement('span')
+        marke.textContent = '​'
+        bereich.insertNode(marke)
+        r = marke.getBoundingClientRect()
+        marke.remove()
       }
-      return { x: r.left, y: r.top }
+      if (r.height || r.top || r.left) {
+        return { x: r.right || r.left, y: r.top, h: r.height || 18 }
+      }
     }
     const b = feld.getBoundingClientRect()
-    return { x: b.left, y: b.top }
+    return { x: b.left, y: b.top, h: 18 }
   }
 
   // ----- Übernehmen / Verwerfen -----------------------------------------
@@ -458,11 +468,20 @@
   )
 
   // ----- Fokus / Eingabe / Verwerfen -------------------------------------
+  // Bei contenteditable auf den obersten editierbaren Container klettern
+  // (Discord/Slate fokussiert oft einen inneren Knoten).
+  function editHost(el) {
+    let n = el
+    while (n && n.parentElement && n.parentElement.isContentEditable) n = n.parentElement
+    return n
+  }
+
   document.addEventListener('focusin', (e) => {
-    const ziel = e.composedPath ? e.composedPath()[0] : e.target
+    let ziel = e.composedPath ? e.composedPath()[0] : e.target
+    if (ziel && ziel.isContentEditable) ziel = editHost(ziel)
     if (eignet(ziel)) {
       feld = ziel
-      flog('Feld im Fokus:', ziel.tagName, ziel.type || (ziel.isContentEditable ? 'contenteditable' : ''))
+      flog('Feld im Fokus:', feld.tagName, feld.type || (feld.isContentEditable ? 'contenteditable' : ''))
       injiziereMain()
     } else {
       feld = null
@@ -476,7 +495,31 @@
   document.addEventListener('input', (e) => {
     if (e.target === feld) planen()
   })
-  document.addEventListener('scroll', () => verstecken(), true)
-  window.addEventListener('resize', () => verstecken())
+  // Beim Scrollen NICHT pauschal verstecken (Chat-Listen scrollen staendig und
+  // wuerden den Vorschlag sofort loeschen). Nur wenn das Feld selbst mitscrollt,
+  // den Geistertext neu positionieren.
+  let scrollGeplant = false
+  document.addEventListener(
+    'scroll',
+    (e) => {
+      if (!aktiverVorschlag || !feld) return
+      const ziel = e.target
+      const betrifftFeld =
+        ziel === document ||
+        ziel === document.documentElement ||
+        ziel === document.body ||
+        (ziel.contains && ziel.contains(feld))
+      if (!betrifftFeld || scrollGeplant) return
+      scrollGeplant = true
+      requestAnimationFrame(() => {
+        scrollGeplant = false
+        rendern()
+      })
+    },
+    true,
+  )
+  window.addEventListener('resize', () => {
+    if (aktiverVorschlag) rendern()
+  })
   window.addEventListener('blur', () => verstecken())
 })()

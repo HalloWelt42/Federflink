@@ -14,9 +14,11 @@ und Bedienung: siehe `extension/README.md`.
 
 ## Anzeige (hybrid)
 
-- `input`/`textarea`: Inline-Geistertext über einen Overlay-Mirror (Shadow-DOM),
-  nur am Zeilenende; sonst Pille.
-- `contenteditable`/komplexe Editoren: schwebende Pille am Cursor.
+- `input`/`textarea` am Zeilenende: Inline-Geistertext über einen Overlay-Mirror
+  (Shadow-DOM), der Text und Stil des Feldes spiegelt.
+- `contenteditable` (Discord/Twitch u. a.) und mid-line-Fälle: grauer Geistertext
+  als Overlay direkt am Cursor - ohne den Editor-DOM anzufassen. Er sitzt auf der
+  Cursor-Zeile, daher kein Problem bei Feldern am unteren Bildrand.
 
 ## Bedienung
 
