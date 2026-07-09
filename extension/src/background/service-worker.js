@@ -31,7 +31,6 @@ if (!self.FEDERFLINK_DEFAULTS) {
     new Promise((r) => chrome.storage.sync.get('optionen', (d) => r(self.ffMerge(d && d.optionen))))
   self.ffSpeichereOptionen = (o) => new Promise((r) => chrome.storage.sync.set({ optionen: o }, r))
 }
-console.log('[Federflink] Service-Worker geladen (Server:', self.FEDERFLINK_DEFAULTS.serverUrl, ')')
 
 // ----- Vervollständigung streamen (pro Port ein Abbruch-Controller) -----
 const abbruch = new WeakMap()

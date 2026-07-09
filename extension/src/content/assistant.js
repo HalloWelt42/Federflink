@@ -15,8 +15,8 @@
   const NS = '__FEDERFLINK__'
   const HOST = location.hostname
 
-  // Diagnose: Logs im Seiten-Konsolenfenster. Zum Stummschalten auf false setzen.
-  const DEBUG = true
+  // Diagnose (Statusbox oben rechts + Konsolen-Logs). Zum Debuggen auf true setzen.
+  const DEBUG = false
   const flog = (...a) => {
     if (DEBUG) console.log('%c[Federflink]', 'color:#2f6154;font-weight:bold', ...a)
   }
