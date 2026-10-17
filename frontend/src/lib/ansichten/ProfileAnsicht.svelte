@@ -3,6 +3,7 @@
 
   import { entferneProfil, ladeProfile, legeProfilAn } from '../api/profile'
   import type { Profil } from '../api/typen'
+  import { neuLadenAufhalten } from '../zustand/fassung.svelte'
 
   let profile = $state<Profil[]>([])
   let fehler = $state('')
@@ -58,6 +59,9 @@
   }
 
   onMount(laden)
+
+  // Angefangenes neues Profil: eine neue Fassung wartet bis zum Reiterwechsel.
+  onMount(() => neuLadenAufhalten(() => [neuId, neuName, neuStil, neuHosts].some((w) => w.trim() !== '')))
 </script>
 
 <div class="karte">

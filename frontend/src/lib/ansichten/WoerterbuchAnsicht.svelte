@@ -4,6 +4,7 @@
   import { ladeCapabilities } from '../api/system'
   import { entferneWort, fuegeWortHinzu, ladeWoerterbuch } from '../api/woerterbuch'
   import type { CapabilitiesAntwort, WortEintrag } from '../api/typen'
+  import { neuLadenAufhalten } from '../zustand/fassung.svelte'
 
   let caps = $state<CapabilitiesAntwort | null>(null)
   let profil = $state('standard')
@@ -52,6 +53,9 @@
     caps = await ladeCapabilities().catch(() => null)
     await laden()
   })
+
+  // Angefangenes Wort im Feld: eine neue Fassung wartet bis zum Reiterwechsel.
+  onMount(() => neuLadenAufhalten(() => neuesWort.trim() !== ''))
 </script>
 
 <div class="karte">

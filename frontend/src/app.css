@@ -362,6 +362,28 @@ textarea.feld {
   background: var(--zustand-fehler);
 }
 
+/* ----- Band über dem Inhalt (z. B. neue Fassung) -------------------------- */
+
+.band {
+  display: flex;
+  align-items: center;
+  gap: var(--a3);
+  padding: var(--a2) var(--a3);
+  background: var(--zustand-info-weich);
+  color: var(--text-1);
+  border: 1px solid var(--zustand-info);
+  border-radius: var(--radius-panel);
+}
+
+.band > i {
+  color: var(--zustand-info);
+}
+
+.band > span {
+  flex: 1;
+  min-width: 0;
+}
+
 /* ----- Karten und Panels -------------------------------------------------- */
 
 .karte {

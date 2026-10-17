@@ -16,7 +16,7 @@ PROJEKT_WURZEL = Path(__file__).resolve().parents[2]
 VERSIONSDATEI = PROJEKT_WURZEL / "version.json"
 
 
-def _lies_version() -> str:
+def lies_version() -> str:
     try:
         daten = json.loads(VERSIONSDATEI.read_text(encoding="utf-8"))
         version = daten.get("version")
@@ -47,7 +47,7 @@ def _env_bool(name: str, standard: bool) -> bool:
     return wert.strip().lower() in ("1", "true", "ja", "yes", "on")
 
 
-APP_VERSION: str = _lies_version()
+APP_VERSION: str = lies_version()
 
 # ----------------------------------------------------------------------------
 # Ablage: Datenbank und Wörterbücher liegen im Projekt (nichts verlässt den Ordner)

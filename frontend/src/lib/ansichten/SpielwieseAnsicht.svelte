@@ -6,6 +6,7 @@
   import { fuegeWortHinzu } from '../api/woerterbuch'
   import type { Befund, CapabilitiesAntwort, KorrekturAntwort } from '../api/typen'
   import { wortDiff } from '../textDiff'
+  import { neuLadenAufhalten } from '../zustand/fassung.svelte'
 
   const BEISPIEL =
     'Ich glab das Ergibnis stimt nich ganz. Bitte pruef die Strasse nochmal, den der Fehlar ist wichtig.'
@@ -40,6 +41,9 @@
     stil: 'Stil',
     tippfehler: 'Tippfehler',
   }
+
+  // Laufende Anfrage oder eigener Text im Feld: eine neue Fassung wartet bis zum Reiterwechsel.
+  onMount(() => neuLadenAufhalten(() => pruefLaeuft || korrLaeuft || satzLaeuft || text !== BEISPIEL))
 
   onMount(async () => {
     try {

@@ -5,6 +5,7 @@
   import { ladeCapabilities } from '../api/system'
   import type { CapabilitiesAntwort, ErgaenzungsModus, LernStatus, Vorschlag } from '../api/typen'
   import { requestJson } from '../api/http'
+  import { neuLadenAufhalten } from '../zustand/fassung.svelte'
 
   const START_TEXT = 'Sehr geehrte Damen und Herren, '
   let text = $state(START_TEXT)
@@ -35,6 +36,9 @@
     caps = await ladeCapabilities().catch(() => null)
     await ladeStatus()
   })
+
+  // Eigener Text im Feld: eine neue Fassung wartet bis zum Reiterwechsel.
+  onMount(() => neuLadenAufhalten(() => text !== START_TEXT))
 
   function planeAnforderung() {
     clearTimeout(entprellung)

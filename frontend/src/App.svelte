@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount, tick } from 'svelte'
 
   import { ladeHealth } from './lib/api/system'
   import ErgaenzungAnsicht from './lib/ansichten/ErgaenzungAnsicht.svelte'
@@ -8,8 +8,7 @@
   import StatusAnsicht from './lib/ansichten/StatusAnsicht.svelte'
   import WoerterbuchAnsicht from './lib/ansichten/WoerterbuchAnsicht.svelte'
   import { naechstesTheme, themeZustand } from './lib/theme/theme.svelte'
-
-  const version = __APP_VERSION__
+  import { fassung, fassungVerfolgen, OBERFLAECHE_FASSUNG, vielleichtNeuLaden } from './lib/zustand/fassung.svelte'
 
   type AnsichtId = 'spielwiese' | 'ergaenzung' | 'woerterbuch' | 'profile' | 'status'
   interface Ansicht {
@@ -26,7 +25,20 @@
     { id: 'status', name: 'Status', icon: 'fa-gauge-high' },
   ]
 
-  let aktuelleAnsicht = $state<AnsichtId>('spielwiese')
+  // Der Reiter steht in der Adresse (#profile): ein Neuladen beim Reiterwechsel landet so auf dem gewählten Reiter.
+  function ansichtAusAdresse(): AnsichtId {
+    const id = location.hash.slice(1)
+    return ansichten.find((a) => a.id === id)?.id ?? 'spielwiese'
+  }
+
+  let aktuelleAnsicht = $state<AnsichtId>(ansichtAusAdresse())
+
+  // Erst wechseln, dann nach neuer Fassung schauen: die verlassene Ansicht hat sich dann schon abgemeldet.
+  async function adresseGewechselt() {
+    aktuelleAnsicht = ansichtAusAdresse()
+    await tick()
+    vielleichtNeuLaden('ortswechsel')
+  }
 
   let backendOk = $state(false)
   let backendVersion = $state('')
@@ -50,7 +62,13 @@
   onMount(() => {
     void pruefeBackend()
     const timer = setInterval(pruefeBackend, 5000)
-    return () => clearInterval(timer)
+    const fassungStoppen = fassungVerfolgen()
+    addEventListener('hashchange', adresseGewechselt)
+    return () => {
+      clearInterval(timer)
+      fassungStoppen()
+      removeEventListener('hashchange', adresseGewechselt)
+    }
   })
 </script>
 
@@ -59,7 +77,7 @@
     <span class="marke">
       <i class="fa-solid fa-feather-pointed"></i>
       Federflink
-      <span class="version">v{version}</span>
+      <span class="version">v{OBERFLAECHE_FASSUNG}</span>
     </span>
 
     <nav class="kopf-nav">
@@ -67,7 +85,7 @@
         <button
           class="reiter"
           class:aktiv={aktuelleAnsicht === ansicht.id}
-          onclick={() => (aktuelleAnsicht = ansicht.id)}
+          onclick={() => (location.hash = ansicht.id)}
         >
           <i class="fa-solid {ansicht.icon}"></i>
           {ansicht.name}
@@ -89,6 +107,18 @@
 
   <main class="haupt">
     <div class="inhalt">
+      {#if fassung.neu}
+        <div class="band" role="status">
+          <i class="fa-solid fa-rotate"></i>
+          <span>
+            <strong>Neue Fassung {fassung.neu} ist da.</strong>
+            Beim nächsten Reiterwechsel lädt Federflink sie von selbst.
+          </span>
+          <button class="knopf primaer klein" onclick={() => location.reload()}>
+            <i class="fa-solid fa-rotate"></i> Jetzt neu laden
+          </button>
+        </div>
+      {/if}
       {#if aktuelleAnsicht === 'spielwiese'}
         <SpielwieseAnsicht />
       {:else if aktuelleAnsicht === 'ergaenzung'}

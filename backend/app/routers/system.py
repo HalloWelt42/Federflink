@@ -18,7 +18,9 @@ router = APIRouter(tags=["System"])
 
 @router.get("/health")
 def health() -> HealthAntwort:
-    return HealthAntwort(version=config.APP_VERSION)
+    # Fassung frisch aus version.json: der Server läuft mit --reload aus dem Arbeitsbaum und bemerkt eine neue
+    # version.json sonst nicht; die Oberfläche vergleicht ihre eingebaute Fassung mit dieser hier.
+    return HealthAntwort(version=config.lies_version())
 
 
 @router.get("/capabilities")
