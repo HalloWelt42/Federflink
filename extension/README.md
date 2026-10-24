@@ -39,5 +39,5 @@ in `input`/`textarea` (am Zeilenende), sonst eine schwebende Pille. **Tab** übe
 ## Anderer Server-Host (z. B. Raspberry Pi)
 
 Die Server-URL in den Einstellungen setzen und in `manifest.json` unter
-`host_permissions` die Adresse ergänzen (z. B. `http://192.168.178.49:8500/*`),
+`host_permissions` die Adresse ergänzen (z. B. `http://192.168.1.20:8500/*`),
 danach die Erweiterung neu laden.
